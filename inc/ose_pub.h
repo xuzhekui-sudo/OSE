@@ -81,9 +81,9 @@ Ose_status ose_kernel_exit(void);
 //sema
 /*信号量id*/
 typedef UINT32 Ose_sema_id;
-/*信号量名�?*/
+/*信号量名字*/
 typedef char const* Ose_sema_name;
-/*信号量最大计�?*/
+/*信号量最大计数*/
 typedef UINT32 Ose_sema_count;
 
 #ifdef __cplusplus
@@ -99,7 +99,7 @@ Ose_status  ose_delete_sema(Ose_sema_id);
 //mutex
 /*互斥量id*/
 typedef UINT32 Ose_mutex_id;
-/*互斥量名�?*/
+/*互斥量名字*/
 typedef char const* Ose_mutex_name;
 
 #ifdef __cplusplus
@@ -137,7 +137,7 @@ typedef struct Ose_fsm_message_st
 #define FSM_DEST_TASK_ID(fsm_msg_ptr) ((fsm_msg_ptr)->dest_task_id)
 /*获取fsm消息中目的进程id*/
 #define FSM_DEST_PROCESS_ID(fsm_msg_ptr) ((fsm_msg_ptr)->dest_process_id)
-/*parameters结构相关�?*/
+/*parameters结构相关宏*/
 #define FSM_PRIMITIVE_ID(fsm_msg_ptr) ((fsm_msg_ptr)->prim_id)
 #define FSM_PARAM_SIZE(fsm_msg_ptr) ((fsm_msg_ptr)->parameters.parameter_len)
 #define FSM_PARAM_PTR(fsm_msg_ptr) ((fsm_msg_ptr)->parameters.parameter_ptr)
@@ -159,8 +159,8 @@ typedef struct Ose_fixed_queue_st
 {
     UINT32  head;      /*头部结点编号*/
     UINT32  tail;      /*尾部结点*/
-    UINT32  free_tail; /*空闲尾部�?
-                                *当队列为空时，上述三者值相�?
+    UINT32  free_tail; /*空闲尾部，
+                                *当队列为空时，上述三者值相等
                                 *当队列为满时，头尾不等但free_tail等于head*/
     UINT32  maxnum;    /*结点数量*/
     UINT32* node;      /*队列空间*/
@@ -187,21 +187,21 @@ Ose_status       ose_send_message_ex_mb(Ose_fsm_message* fsm_msg_ptr, Bool is_pr
 #endif
 
 //task
-/*优先�?*/
+/*优先级*/
 typedef UINT8 Ose_task_pri;
-/*栈大�?*/
+/*栈大小*/
 typedef UINT16 Ose_stack_size;
-/*任务入口函数的入�?*/
+/*任务入口函数的入参*/
 typedef UINT32 Ose_task_param;
-/*任务入口函数的指�?*/
+/*任务入口函数的指针*/
 typedef void* (*Ose_task_entry)(void*);
 /*各标准任务的初始化函数的指针*/
 typedef Ose_status (*Ose_func_init)(void);
-/*标准任务的主处理函数的指�?*/
+/*标准任务的主处理函数的指针*/
 typedef Ose_status (*Ose_func_main)(Ose_fsm_message*);
-/*删除函数的函数指�?*/
+/*删除函数的函数指针*/
 typedef Ose_status (*Ose_func_delete)(void);
-/*任务的重启函数。目前保�?*/
+/*任务的重启函数。目前保留*/
 typedef Ose_status (*Ose_func_reset)(void);
 
 #define OSE_PROCESS_NUMS 15
@@ -218,7 +218,7 @@ typedef struct Ose_process_desc_tbl_st
     } process_info[OSE_PROCESS_NUMS];
 } Ose_process_desc_tbl;
 
-/*任务描述�?*/
+/*任务描述表*/
 typedef struct Ose_task_desc_tbl_st
 {
     Ose_task_id       task_id;
@@ -235,8 +235,8 @@ typedef struct Ose_task_desc_tbl_st
         Ose_func_delete task_delete;
     } task_func;
     Ose_process_desc_tbl* process_tbl_ptr; /*暂不使用*/
-    Ose_mb_id             task_ext_queue;  /*任务间邮�?*/
-    Ose_queue_id          task_int_queue;  /*任务内邮�?*/
+    Ose_mb_id             task_ext_queue;  /*任务间邮箱*/
+    Ose_queue_id          task_int_queue;  /*任务内邮箱*/
 } Ose_task_desc_tbl;
 
 #ifdef __cplusplus
@@ -258,7 +258,7 @@ Ose_status ose_post_task_signal();
 //buf
 /*OSE的最大内存池个数*/
 #define OSE_MAX_POOLS               3
-/*内存池编�?*/
+/*内存池编号*/
 /*该编号必须从0开始逐一递增*/
 #define OSE_PRIVATE_POOL_ID         0
 #define OSE_FSM_MSG_HEADER_POOL_ID  1
@@ -312,11 +312,11 @@ Ose_status   ose_change_timer_value(Ose_timer_id,Ose_timer_value);
 
 //trace
 #define OSE_TRACE_FATAL       0     /* 严重错误 */
-#define OSE_TRACE_ERROR       1     /* 一般错�? */
+#define OSE_TRACE_ERROR       1     /* 一般错误 */
 #define OSE_TRACE_WARN        2     /* 警告 */
 #define OSE_TRACE_DEBUG       3     /* 调试信息 */
-#define OSE_TRACE_INFO        4     /* 一般信�? */
-#define OSE_TRACE_ALL         5     /* 所有信�? */
+#define OSE_TRACE_INFO        4     /* 一般信息 */
+#define OSE_TRACE_ALL         5     /* 所有信息 */
 
 #ifdef __cplusplus
 extern "C" {
@@ -368,10 +368,10 @@ SINT32 ose_link_list_find_data_index(const LINK_LIST * const list, void * data);
 }
 #endif
 
-/*Ose_status返回�?*/
+/*Ose_status返回值*/
 #define OSE_SUCCESS                  0  /*成功*/
 #define OSE_FAILURE                  -1 /*失败*/
-/*其他�?: 失败*/
+/*其他值: 失败*/
 #define OSE_NO_WAIT                  0
 #define OSE_WAIT_FOREVER             -1
 #define OSE_WAIT_TIMEOUT             107

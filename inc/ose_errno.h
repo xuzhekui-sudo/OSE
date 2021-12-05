@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_error.h                                                 */
-/* Description   : é”™è¯¯ç å®å®šä¹‰                                                  */
+/* Description   : ´íÎóÂëºê¶¨Òå                                                  */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -11,287 +11,287 @@
 #define OSE_ERROR_H
 
 /***********************************************
-*1000ä»¥å†…çš„é”™è¯¯ç ä¸ºOSEä½¿ç”¨ã€?
+*1000ÒÔÄÚµÄ´íÎóÂëÎªOSEÊ¹ÓÃ¡£
 *
-*OSEå°†è¿™äº›é”™è¯¯ç å…¨éƒ¨åšä¸ºä¸¥é‡å¼‚å¸¸ä½¿ç”¨
+*OSE½«ÕâÐ©´íÎóÂëÈ«²¿×öÎªÑÏÖØÒì³£Ê¹ÓÃ
 *
-*å¯¹äºŽé”™è¯¯ç çš„æŠ¥é€ï¼Œä¸ºé¿å…å¤šæ¬¡æŠ¥é€?,OSEåªåœ¨æŽ¥å£å‡½æ•°é‡ŒæŠ¥
-*æŽ¥å£å‡½æ•°è°ƒç”¨æŽ¥å£å‡½æ•°ï¼Œè°ƒç”¨è€…ä¸æŠ¥é€?
+*¶ÔÓÚ´íÎóÂëµÄ±¨ËÍ£¬Îª±ÜÃâ¶à´Î±¨ËÍ,OSEÖ»ÔÚ½Ó¿Úº¯ÊýÀï±¨
+*½Ó¿Úº¯Êýµ÷ÓÃ½Ó¿Úº¯Êý£¬µ÷ÓÃÕß²»±¨ËÍ
 ********************************/
-/*æ–­è¨€å¤±è´¥*/
+/*¶ÏÑÔÊ§°Ü*/
 #define OSE_ASSERT_FAIL 0
 
-/*OSEçŠ¶æ€å¼‚å¸?*/
+/*OSE×´Ì¬Òì³£*/
 #define OSE_STATE_ERROR 1
 
-/*OSEåˆå§‹åŒ–å¤±è´?*/
+/*OSE³õÊ¼»¯Ê§°Ü*/
 #define OSE_INIT_FAIL 2
 
-/*ä»»åŠ¡IDéžæ³•*/
+/*ÈÎÎñID·Ç·¨*/
 #define OSE_TASK_ID_ERROR 3
 
-/*ä»»åŠ¡å…¥å£å‡½æ•°ä¸ºç©º*/
+/*ÈÎÎñÈë¿Úº¯ÊýÎª¿Õ*/
 #define OSE_TASK_ENTRY_NULL 4
 
-/*åˆ›å»ºçš„ä»»åŠ¡å·²ç»åˆ›å»?*/
+/*´´½¨µÄÈÎÎñÒÑ¾­´´½¨*/
 #define OSE_TASK_CREATED 5
 
-/*é‚®ç®±åˆ›å»ºå¤±è´¥*/
+/*ÓÊÏä´´½¨Ê§°Ü*/
 #define OSE_CREATE_MB_FAIL 6
 
-/*ç³»ç»Ÿåˆ›å»ºä»»åŠ¡å¤±è´¥*/
+/*ÏµÍ³´´½¨ÈÎÎñÊ§°Ü*/
 #define OSE_SYS_CREATE_TASK_FAIL 7
 
-/*ä»»åŠ¡æ²¡åˆ›å»?*/
+/*ÈÎÎñÃ»´´½¨*/
 #define OSE_TASK_NO_CREATED 8
 
-/*ä»»åŠ¡ä¼˜å…ˆçº§è®¾ç½®å¤±è´?*/
+/*ÈÎÎñÓÅÏÈ¼¶ÉèÖÃÊ§°Ü*/
 #define OSE_TASK_SET_PRI_FAIL 9
 
-/*èŽ·å–ä»»åŠ¡ä¼˜å…ˆçº§æ—¶ï¼Œå‡ºå‚ä½ç©?*/
+/*»ñÈ¡ÈÎÎñÓÅÏÈ¼¶Ê±£¬³ö²ÎÎ»¿Õ*/
 #define OSE_TASK_GET_PTR_NULL 10
 
-/*èŽ·å–ä¼˜å…ˆçº§å¤±è´?*/
+/*»ñÈ¡ÓÅÏÈ¼¶Ê§°Ü*/
 #define OSE_TASK_GET_PRI_FAIL 11
 
-/*åˆ›å»ºä»»åŠ¡é‚®ç®±(å†…å’Œé—?)å¤±è´¥*/
+/*´´½¨ÈÎÎñÓÊÏä(ÄÚºÍ¼ä)Ê§°Ü*/
 #define OSE_MB_CREATE_FAIL 12
 
-/*åˆ›å»ºé‚®ç®±æ—¶ï¼Œé‚®ç®±å¤§å°ä¸?0*/
+/*´´½¨ÓÊÏäÊ±£¬ÓÊÏä´óÐ¡Îª0*/
 #define OSE_MB_SIZE_ZERO 13
 
-/*åˆ›å»ºä»»åŠ¡é—´é‚®ç®±æ—¶,é‚®ç®±idé”™è¯¯*/
+/*´´½¨ÈÎÎñ¼äÓÊÏäÊ±,ÓÊÏäid´íÎó*/
 #define OSE_MBIDOR_QID_ERROR 14
 
-/*åˆ›å»ºä»»åŠ¡é—´é‚®ç®±æ—¶ï¼Œé‚®ç®±å·²åˆ›å»º*/
+/*´´½¨ÈÎÎñ¼äÓÊÏäÊ±£¬ÓÊÏäÒÑ´´½¨*/
 #define OSE_MB_CREATED 15
 
-/*èŽ·å–ä»»åŠ¡é—´é‚®ç®±æœªåˆ›å»º*/
+/*»ñÈ¡ÈÎÎñ¼äÓÊÏäÎ´´´½¨*/
 #define OSE_GET_MB_NO_CREATE 16
 
-/*å‘é€ä»»åŠ¡é—´é‚®ç®±æœªåˆ›å»?*/
+/*·¢ËÍÈÎÎñ¼äÓÊÏäÎ´´´½¨*/
 #define OSE_SEND_MB_NOCREATE 16
 
-/*ä»»åŠ¡é—´é‚®ç®±idéžæ³•*/
+/*ÈÎÎñ¼äÓÊÏäid·Ç·¨*/
 #define OSE_MB_MID_ERROR 17
 
-/*ä»»åŠ¡é—´é‚®ç®±èŽ·å–å¤±è´?*/
+/*ÈÎÎñ¼äÓÊÏä»ñÈ¡Ê§°Ü*/
 #define OSE_MB_GET_ERROR 18
 
-/*ä»»åŠ¡é—´é‚®ç®±å‘é€å¤±è´?(é˜Ÿåˆ—å‡½æ•°è¿”å›žå¤±è´¥)*/
+/*ÈÎÎñ¼äÓÊÏä·¢ËÍÊ§°Ü(¶ÓÁÐº¯Êý·µ»ØÊ§°Ü)*/
 #define OSE_MB_SEND_ERROR 19
 
-/*å‘é€æ¶ˆæ¯æ—¶ï¼Œç›®çš„ä»»åŠ¡çš„ä»»åŠ¡å†…é‚®ç®±æ²¡åˆ›å»º*/
+/*·¢ËÍÏûÏ¢Ê±£¬Ä¿µÄÈÎÎñµÄÈÎÎñÄÚÓÊÏäÃ»´´½¨*/
 #define OSE_QUEUE_NO_CREATED 20
 
-/*åˆ é™¤ä»»åŠ¡å†…é‚®ç®±æ—¶ï¼Œqidéžæ³•*/
+/*É¾³ýÈÎÎñÄÚÓÊÏäÊ±£¬qid·Ç·¨*/
 #define OSE_DEL_QUEUE_ERROR 21
 
-/*åˆ›å»ºäº’æ–¥é‡å¤±è´?*/
+/*´´½¨»¥³âÁ¿Ê§°Ü*/
 #define OSE_MUTEX_CREATE_FAIL 22
 
-/*åˆ›å»ºäº’æ–¥é‡æ—¶ï¼Œfalgéžæ³•*/
+/*´´½¨»¥³âÁ¿Ê±£¬falg·Ç·¨*/
 #define OSE_MUTEX_FLAG_ERROR 23
 
-/*äº’æ–¥é‡æ“ä½œæ—¶ï¼Œidéžæ³•*/
+/*»¥³âÁ¿²Ù×÷Ê±£¬id·Ç·¨*/
 #define OSE_MUTEX_ID_ERR 24
 
-/*äº’æ–¥é‡æ“ä½œæ—¶ï¼Œäº’æ–¥é‡æ²¡åˆ›å»?*/
+/*»¥³âÁ¿²Ù×÷Ê±£¬»¥³âÁ¿Ã»´´½¨*/
 #define OSE_MUTEX_NO_CREATED 25
 
-/*äº’æ–¥é‡èŽ·å–å¤±è´?*/
+/*»¥³âÁ¿»ñÈ¡Ê§°Ü*/
 #define OSE_MUTEX_GET_FAIL 26
 
-/*åˆ›å»ºä¿¡å·é‡æ—¶ï¼Œæœ€å¤§è®¡æ•°ä¸º0*/
+/*´´½¨ÐÅºÅÁ¿Ê±£¬×î´ó¼ÆÊýÎª0*/
 #define OSE_SEMA_COUNT_ERROR 27
 
-/*ä¿¡å·é‡æ“ä½œæ—¶ï¼Œidéžæ³•*/
+/*ÐÅºÅÁ¿²Ù×÷Ê±£¬id·Ç·¨*/
 #define OSE_SEMA_ID_ERROR 28
 
-/*ä¿¡å·é‡æ“ä½œæ—¶ï¼Œæ²¡åˆ›å»º*/
+/*ÐÅºÅÁ¿²Ù×÷Ê±£¬Ã»´´½¨*/
 #define OSE_SEMA_NO_CREATED 29
 
-/*ä¿¡å·é‡èŽ·å–å¤±è´?*/
+/*ÐÅºÅÁ¿»ñÈ¡Ê§°Ü*/
 #define OSE_SEMA_GET_FAIL 30
 
-/*åˆ›å»ºå®šæ—¶å™¨æ—¶ï¼Œidéžæ³•*/
+/*´´½¨¶¨Ê±Æ÷Ê±£¬id·Ç·¨*/
 #define OSE_CREATE_TIMERID_ERROR 31
 
-/*å®šæ—¶å™¨é‡å¤åˆ›å»?*/
+/*¶¨Ê±Æ÷ÖØ¸´´´½¨*/
 #define OSE_TIMER_CREATED 32
 
-/*åˆ›å»ºå®šæ—¶å™¨æ—¶ï¼Œå®šæ—¶å™¨ç±»åž‹é”™è¯¯*/
+/*´´½¨¶¨Ê±Æ÷Ê±£¬¶¨Ê±Æ÷ÀàÐÍ´íÎó*/
 #define OSE_TIMER_FLAG_ERROR 33
 
-/*å®šæ—¶å™¨åˆ›å»?(åº•å±‚)å¤±è´¥*/
+/*¶¨Ê±Æ÷´´½¨(µ×²ã)Ê§°Ü*/
 #define OSE_TIMER_CREATE_FAIL 34
 
-/*å®šæ—¶å™¨èµ„æºç”³è¯·å¤±è´?*/
+/*¶¨Ê±Æ÷×ÊÔ´ÉêÇëÊ§°Ü*/
 #define OSE_TIMER_LIST_ERROR 35
 
-/*å¼€å¯æ—¶å®šæ—¶å™¨è¶…æ—¶æ¶ˆæ¯ä¸ºç©ºï¼Œè€Œä»Žæœªå¼€å¯è¿‡*/
+/*¿ªÆôÊ±¶¨Ê±Æ÷³¬Ê±ÏûÏ¢Îª¿Õ£¬¶ø´ÓÎ´¿ªÆô¹ý*/
 #define OSE_TIMER_MSG_ERROR 36
 
-/*å®šæ—¶å™¨å¼€å?(åº•å±‚)å¤±è´¥*/
+/*¶¨Ê±Æ÷¿ªÆô(µ×²ã)Ê§°Ü*/
 #define OSE_TIMER_START_FAIL 37
 
-/*å®šæ—¶å™¨åœæ­?(åº•å±‚)å¤±è´¥*/
+/*¶¨Ê±Æ÷Í£Ö¹(µ×²ã)Ê§°Ü*/
 #define OSE_TIMER_STOP_FAIL 38
 
-/*æ“ä½œå®šæ—¶å™¨æ—¶ï¼Œå®šæ—¶å™¨æœªåˆ›å»?*/
+/*²Ù×÷¶¨Ê±Æ÷Ê±£¬¶¨Ê±Æ÷Î´´´½¨*/
 #define OSE_NO_CREATE 39
 
-/*å®šæ—¶å™¨åˆ é™?(åº•å±‚)å¤±è´¥*/
+/*¶¨Ê±Æ÷É¾³ý(µ×²ã)Ê§°Ü*/
 #define OSE_TIMER_DELETE_FAIL 40
 
-/*å®šæ—¶å™¨çš„è¶…æ—¶æ¶ˆæ¯é˜Ÿåˆ—æ»?*/
+/*¶¨Ê±Æ÷µÄ³¬Ê±ÏûÏ¢¶ÓÁÐÂú*/
 #define OSE_TIMEOUT_QUEUE_OVERFLOW 41
 
-/*å†…å­˜æ± åˆ›å»ºäº’æ–¥é‡å¤±è´¥*/
+/*ÄÚ´æ³Ø´´½¨»¥³âÁ¿Ê§°Ü*/
 #define OSE_BUF_INIT_MUTEX_FAIL 50
 
-/*å†…å­˜æ± ç”³è¯·å†…å­˜å¤±è´?*/
+/*ÄÚ´æ³ØÉêÇëÄÚ´æÊ§°Ü*/
 #define OSE_BUF_INIT_MALLOC_FAIL 51
 
-/*ç”³è¯·å†…å­˜æ—¶ï¼Œå†…å­˜è€—å°½*/
+/*ÉêÇëÄÚ´æÊ±£¬ÄÚ´æºÄ¾¡*/
 #define OSE_BUF_NO_MEM 52
 
-/*ç”³è¯·å†…å­˜æ—¶ï¼Œé•¿åº¦å¤ªå¤§*/
+/*ÉêÇëÄÚ´æÊ±£¬³¤¶ÈÌ«´ó*/
 #define OSE_BUF_GET_MAXSIZE 53
 
-/*blockå¤´ä¿ç•™å­—æ®µé”™è¯?*/
+/*blockÍ·±£Áô×Ö¶Î´íÎó*/
 #define OSE_BUF_BLOCK_ERR 54
 
-/*é‡å¤é‡Šæ”¾å†…å­˜(é‡Šæ”¾çš„å†…å­˜æ²¡åˆ†é…)*/
+/*ÖØ¸´ÊÍ·ÅÄÚ´æ(ÊÍ·ÅµÄÄÚ´æÃ»·ÖÅä)*/
 #define OSE_FREE_UNUSED_BUFF 55
 
-/*é‡Šæ”¾ç©ºæŒ‡é’?*/
+/*ÊÍ·Å¿ÕÖ¸Õë*/
 #define OSE_FREE_NULL 56
 
-/*linkå†…å­˜æ²¡åˆ†é…?*/
+/*linkÄÚ´æÃ»·ÖÅä*/
 #define OSE_LINK_UNUSED_BUFF 57
 
-/*linkçš„æ¬¡æ•°è¶…é™?*/
+/*linkµÄ´ÎÊý³¬ÏÞ*/
 #define OSE_LINK_EXCEED_MAXCNT 58
 
-/*linkå†…å­˜ä¸ºç©º*/
+/*linkÄÚ´æÎª¿Õ*/
 #define OSE_LINK_NULL 59
 
-/*linkæˆ–è€…freeå†…å­˜æ—¶ï¼Œè¯¥å†…å­˜åœ°å€æ˜¯OSEçš„åœ°å€èŒƒå›´ä½†ä¸æ˜¯æœ‰æ•ˆåœ°å€*/
+/*link»òÕßfreeÄÚ´æÊ±£¬¸ÃÄÚ´æµØÖ·ÊÇOSEµÄµØÖ··¶Î§µ«²»ÊÇÓÐÐ§µØÖ·*/
 #define OSE_BUFF_ADDR_ERR01 60
 
-/*linkæˆ–è€…freeå†…å­˜æ—¶ï¼Œè¯¥å†…å­˜åœ°å€ä¸æ˜¯OSEçš„åœ°å€èŒƒå›´*/
+/*link»òÕßfreeÄÚ´æÊ±£¬¸ÃÄÚ´æµØÖ·²»ÊÇOSEµÄµØÖ··¶Î§*/
 #define OSE_BUFF_ADDR_ERR02 61
 
-/*æ²¡æœ‰åŠ¨æ€å†…å­?*/
+/*Ã»ÓÐ¶¯Ì¬ÄÚ´æ*/
 #define OSE_NO_MEM 62
 
-/*é‡Šæ”¾åŠ¨æ€å†…å­˜ä¸ºç©ºæŒ‡é’?*/
+/*ÊÍ·Å¶¯Ì¬ÄÚ´æÎª¿ÕÖ¸Õë*/
 #define OSE_MEM_FREE_NULL 63
 
-/*èŽ·å–ç³»ç»Ÿæ—¶é—´é”™è¯¯*/
+/*»ñÈ¡ÏµÍ³Ê±¼ä´íÎó*/
 #define OSE_GET_SYSTIME_ERROR 64
 
-/*åˆ›å»ºäº‹ä»¶è°ƒåº¦å™¨æ—¶ï¼Œå¼€å¯æˆ–åœæ­¢å‡½æ•°ä¸ºç©º*/
+/*´´½¨ÊÂ¼þµ÷¶ÈÆ÷Ê±£¬¿ªÆô»òÍ£Ö¹º¯ÊýÎª¿Õ*/
 #define OSE_EVENT_CREATE_FUN_NULL 65
 
-/*å¾€äº‹ä»¶è°ƒåº¦å™¨é‡Œè®¾ç½®äº‹ä»¶æ—¶ï¼Œå›žè°ƒå‡½æ•°ä¸ºç©º*/
+/*ÍùÊÂ¼þµ÷¶ÈÆ÷ÀïÉèÖÃÊÂ¼þÊ±£¬»Øµ÷º¯ÊýÎª¿Õ*/
 #define OSE_EVENT_SET_FUNC_NULL 66
 
-/*æ“ä½œäº‹ä»¶è°ƒåº¦å™¨æ—¶ï¼Œå…¥å‚çš„è°ƒåº¦å™¨æŒ‡é’ˆä¸ºç©?*/
+/*²Ù×÷ÊÂ¼þµ÷¶ÈÆ÷Ê±£¬Èë²ÎµÄµ÷¶ÈÆ÷Ö¸ÕëÎª¿Õ*/
 #define OSE_EVENT_ES_NULL 67
 
-/*æ“ä½œäº‹ä»¶è°ƒåº¦å™¨æ—¶ï¼Œå…¥å‚çš„è°ƒåº¦å™¨æŒ‡é’ˆé”™è¯?(ä¸€èˆ¬esä¸æ˜¯åˆæ³•çš„å€?)*/
+/*²Ù×÷ÊÂ¼þµ÷¶ÈÆ÷Ê±£¬Èë²ÎµÄµ÷¶ÈÆ÷Ö¸Õë´íÎó(Ò»°ães²»ÊÇºÏ·¨µÄÖµ)*/
 #define OSE_EVENT_ES_ERROR 68
 
-/*é‡ç½®æˆ–è€…é‡å¯äº‹ä»¶æ—¶ï¼Œäº‹ä»¶æŒ‡é’ˆä¸ºç©?*/
+/*ÖØÖÃ»òÕßÖØÆôÊÂ¼þÊ±£¬ÊÂ¼þÖ¸ÕëÎª¿Õ*/
 #define OSE_EVENT_IS_NULL 69
 
-/*é‡ç½®æˆ–è€…é‡å¯äº‹ä»¶æ—¶ï¼Œäº‹ä»¶æŒ‡é’ˆä¸æ˜¯åˆæ³•äº‹ä»?(éžæ³•æˆ–å·²è¶…æ—¶)*/
+/*ÖØÖÃ»òÕßÖØÆôÊÂ¼þÊ±£¬ÊÂ¼þÖ¸Õë²»ÊÇºÏ·¨ÊÂ¼þ(·Ç·¨»òÒÑ³¬Ê±)*/
 #define OSE_EVENT_IS_ERROR 70
 
-/*èŽ·å–äº‹ä»¶è°ƒåº¦å™¨é‡ŒæŸäº‹ä»¶çš„å‰©ä½™æ—¶é—´æ—¶ï¼Œå‡ºå‚ä¸ºç©º*/
+/*»ñÈ¡ÊÂ¼þµ÷¶ÈÆ÷ÀïÄ³ÊÂ¼þµÄÊ£ÓàÊ±¼äÊ±£¬³ö²ÎÎª¿Õ*/
 #define OSE_EVENT_GET_TIME_NULL 71
 
-/*è°ƒåº¦å™¨è¢«æŒ‚èµ·åŽï¼Œä¸Šå±‚è°ƒç”¨OSEçš„è¶…æ—¶æŽ¥å?*/
+/*µ÷¶ÈÆ÷±»¹ÒÆðºó£¬ÉÏ²ãµ÷ÓÃOSEµÄ³¬Ê±½Ó¿Ú*/
 #define OSE_EVENT_CALL_HANDLE_ERROR 72
 
-/*æ“ä½œhashè¡¨æ—¶ï¼Œè¡¨æŒ‡é’ˆä¸ºç©º*/
+/*²Ù×÷hash±íÊ±£¬±íÖ¸ÕëÎª¿Õ*/
 #define OSE_HASH_TBL_NULL 73
 
-/*æ“ä½œhashè¡¨é‡ŒæŸä¸ªç»“ç‚¹æ—¶ï¼Œå‡ºå‚ä¸ºç©º*/
+/*²Ù×÷hash±íÀïÄ³¸ö½áµãÊ±£¬³ö²ÎÎª¿Õ*/
 #define OSE_HASH_ITEM_PTR_NULL 74
 
-/*å†…å­˜æ‹·è´æ—¶ï¼Œé‡å */
+/*ÄÚ´æ¿½±´Ê±£¬ÖØµþ*/
 #define OSE_MEMCPY_WRAP 75
 
-/*ä»»åŠ¡åˆå§‹åŒ–å‡½æ•°ä¸ºç©?*/
+/*ÈÎÎñ³õÊ¼»¯º¯ÊýÎª¿Õ*/
 #define OSE_INIT_FUNC_NULL 76
 
-/*ä»»åŠ¡åˆå§‹åŒ–å‡½æ•°è¿”å›žå¤±è´?*/
+/*ÈÎÎñ³õÊ¼»¯º¯Êý·µ»ØÊ§°Ü*/
 #define OSE_INIT_FUNC_FAIL 77
 
-/*åˆ›å»ºtcpè¿žæŽ¥æ—¶ï¼Œç³»ç»Ÿè¿”å›žå¤±è´¥*/
+/*´´½¨tcpÁ¬½ÓÊ±£¬ÏµÍ³·µ»ØÊ§°Ü*/
 #define OSE_SSL_CREATE_FAIL 78
 
-/*é‡å¯TCPè¿žæŽ¥æ—¶ï¼Œè¿žæŽ¥å·é”™è¯?*/
+/*ÖØÆôTCPÁ¬½ÓÊ±£¬Á¬½ÓºÅ´íÎó*/
 #define OSE_SSL_RESET_SLNOERR 79
 
-/*é‡å¯TCPè¿žæŽ¥æ—¶ï¼Œè¯¥è¿žæŽ¥æ²¡åˆ›å»º*/
+/*ÖØÆôTCPÁ¬½ÓÊ±£¬¸ÃÁ¬½ÓÃ»´´½¨*/
 #define OSE_SSL_RESET_NOCREATE 80
 
-/*é‡å¯TCPæœåŠ¡å™¨ç«¯é”™è¯¯*/
+/*ÖØÆôTCP·þÎñÆ÷¶Ë´íÎó*/
 #define OSE_SSL_RESET_ERROR 81
 
-/*æŽ¥æ”¶æ•°æ®åŒ…æ—¶ï¼Œç³»ç»Ÿè¿”å›žé”™è¯?*/
+/*½ÓÊÕÊý¾Ý°üÊ±£¬ÏµÍ³·µ»Ø´íÎó*/
 #define OSE_SSL_RECV_ERROR 82
 
-/*å‘é€æ•°æ®åŒ…æ—¶ï¼Œç³»ç»Ÿè¿”å›žé”™è¯¯*/
+/*·¢ËÍÊý¾Ý°üÊ±£¬ÏµÍ³·µ»Ø´íÎó*/
 #define OSE_SSL_SEND_ERROR 83
 
-/*åˆ é™¤tcpè¿žæŽ¥æ—¶ï¼Œé”™è¯¯*/
+/*É¾³ýtcpÁ¬½ÓÊ±£¬´íÎó*/
 #define OSE_SSL_DEL_ERROR 84
 
-/*blisté˜Ÿåˆ—æ“ä½œæ—¶ï¼Œé˜Ÿåˆ—æŽ§åˆ¶å­—æ®µå°¾ç©ºæŒ‡é’ˆ*/
+/*blist¶ÓÁÐ²Ù×÷Ê±£¬¶ÓÁÐ¿ØÖÆ×Ö¶ÎÎ²¿ÕÖ¸Õë*/
 #define OSE_BLIST_NULL 85
 
-/*blisté˜Ÿåˆ—æ“ä½œæ—¶ï¼Œå‡ºå‚ä¸ºç©º*/
+/*blist¶ÓÁÐ²Ù×÷Ê±£¬³ö²ÎÎª¿Õ*/
 #define OSE_BLIST_OUTPUT_NULL 86
 
-/*blisté˜Ÿåˆ—æ“ä½œæ—¶ï¼Œç»“ç‚¹æŒ‡é’ˆä¸ºç©º*/
+/*blist¶ÓÁÐ²Ù×÷Ê±£¬½áµãÖ¸ÕëÎª¿Õ*/
 #define OSE_BLIST_NODE_NULL 87
 
-/*ä¿¡å·é‡countè¶…è¿‡ä¸Šé™*/
+/*ÐÅºÅÁ¿count³¬¹ýÉÏÏÞ*/
 #define OSE_SEMA_COUNT_EXCEED 88
 
-/*åº•å±‚ä¿¡å·é‡èŽ·å–å¤±è´?*/
+/*µ×²ãÐÅºÅÁ¿»ñÈ¡Ê§°Ü*/
 #define OSE_SEMA_GET_ERROR 89
 
-/*æ‰¹é‡å†…å­˜æ“ä½œæ—¶ï¼Œé¢„è¦†ç›–OSEå¤´éƒ¨*/
+/*ÅúÁ¿ÄÚ´æ²Ù×÷Ê±£¬Ô¤¸²¸ÇOSEÍ·²¿*/
 #define OSE_BLOCK_HEAD_CRITICAL 90
 
-/*æ‰¹é‡å†…å­˜æ“ä½œæ—¶ï¼Œå°¾éƒ¨è¶Šç•Œ*/
+/*ÅúÁ¿ÄÚ´æ²Ù×÷Ê±£¬Î²²¿Ô½½ç*/
 #define OSE_BLOCK_BODY_CRITICAL 91
 
-/*æ‰¹é‡å†…å­˜æ“ä½œæ—¶ï¼Œé•¿åº¦æ¯”ç”³è¯·å†…å­˜è¿˜é•?*/
+/*ÅúÁ¿ÄÚ´æ²Ù×÷Ê±£¬³¤¶È±ÈÉêÇëÄÚ´æ»¹³¤*/
 #define OSE_BLOCK_LENGTH_TALL 92
 
-/*æ‰¹é‡å†…å­˜æ“ä½œæ—?,å†…å­˜å·²ç»é‡Šæ”¾*/
+/*ÅúÁ¿ÄÚ´æ²Ù×÷Ê±,ÄÚ´æÒÑ¾­ÊÍ·Å*/
 #define OSE_BLOCK_UNUSED_BUFF 93
 
-/*å†…å­˜å¼‚å¸¸*/
+/*ÄÚ´æÒì³£*/
 #define OSE_BLOCK_ERROR 94
 
-/*GSMOSEç©ºæŒ‡é’ˆæˆ–è€…å…¶ä»–æŒ‡é’ˆé”™è¯?*/
+/*GSMOSE¿ÕÖ¸Õë»òÕßÆäËûÖ¸Õë´íÎó*/
 #define OSE_INVALID_POINTER 95
 
-/*å®šæ—¶å™¨èµ„æºä¸å¤?*/
+/*¶¨Ê±Æ÷×ÊÔ´²»¹»*/
 #define OSE_TIMER_NO_ID 96
 
-/*ç”³è¯·æ‰¹é‡å†…å­˜å¤±è´¥*/
+/*ÉêÇëÅúÁ¿ÄÚ´æÊ§°Ü*/
 #define OSE_MULTI_MEM_FAIL 97
 
-/*åŠ¨æ€å†…å­˜é‡Šæ”¾å¼‚å¸?*/
+/*¶¯Ì¬ÄÚ´æÊÍ·ÅÒì³£*/
 #define OSE_DYNAMIC_MEM_ERR 98
 
 

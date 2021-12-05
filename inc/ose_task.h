@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_task.h                                                  */
-/* Description   : 绯荤粺浠诲姟澶存枃浠?                                                */
+/* Description   : 系统任务头文件                                                */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -11,7 +11,7 @@
 #define OSE_TASK_H
 
 
-/*浠诲姟鐨勬帶鍒跺潡*/
+/*任务的控制块*/
 typedef struct Ose_task_spec_tbl_st
 {
     pthread_t         thread_id;

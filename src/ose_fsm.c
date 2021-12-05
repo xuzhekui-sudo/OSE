@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_fsm.c                                                   */
-/* Description   : FSM娑堟伅                                                      */
+/* Description   : FSM消息                                                      */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -14,7 +14,7 @@
 
 /*****************************************************************************
 * Function  : ose_get_fsm_msg
-* Purpose   : fsm娑堟伅鐨勭敵璇峰嚱鏁?
+* Purpose   : fsm消息的申请函数
 * Relation  :
 *
 * Input Parameters:
@@ -24,26 +24,26 @@
 *       N/A                 N/A
 *
 *
-* Return: 杩斿洖鍗虫垚鍔?
+* Return: 返回即成功
 * Note:
 *******************************************************************************/
 Ose_fsm_message* ose_fsm_get_msg(UINT16 parameter_len)
 {
     Ose_fsm_message* fsm_msg_ptr;
 
-    /*鏌ユ壘block*/
+    /*查找block*/
     fsm_msg_ptr = (Ose_fsm_message*)ose_get_mem(OSE_FSM_MSG_HEADER_POOL_ID, sizeof(Ose_fsm_message));
 
-    /*濡傛灉parameter_len涓嶄负0 锛岀敵璇峰唴瀛?*/
+    /*如果parameter_len不为0 ，申请内存*/
     if(parameter_len != 0)
     {
-        /*涓鸿parameter鐢宠鍐呭瓨*/
+        /*为该parameter申请内存*/
         FSM_PARAM_PTR(fsm_msg_ptr)  = ose_get_mem(OSE_COMMON_POOL_ID,parameter_len);
         FSM_PARAM_SIZE(fsm_msg_ptr) = parameter_len;
     }
     else
     {
-        /*瀵筽arameter缁撴瀯瀵瑰簲瀛楁璧嬪�?,parameter娌℃湁鐢宠鍐呭瓨*/
+        /*对parameter结构对应字段赋值,parameter没有申请内存*/
         FSM_PARAM_PTR(fsm_msg_ptr)  = NULL;
         FSM_PARAM_SIZE(fsm_msg_ptr) = 0;
     }
@@ -51,7 +51,7 @@ Ose_fsm_message* ose_fsm_get_msg(UINT16 parameter_len)
 }
 /*****************************************************************************
 * Function  : ose_fsm_free_msg
-* Purpose   : fsm娑堟伅鐨勯噴鏀惧嚱鏁?
+* Purpose   : fsm消息的释放函数
 * Relation  :
 *
 * Input Parameters:
@@ -61,14 +61,14 @@ Ose_fsm_message* ose_fsm_get_msg(UINT16 parameter_len)
 *       N/A                 N/A
 *
 *
-* Return: 杩斿洖鍗虫垚鍔?
+* Return: 返回即成功
 * Note:
 *******************************************************************************/
 Ose_status ose_fsm_free_msg(Ose_fsm_message* fsm_msg_ptr)
 {
     OSE_ASSERT(fsm_msg_ptr != NULL);
 
-    /*鍒ゆ柇鏄惁涓轰竴娈靛紡*/
+    /*判断是否为一段式*/
     if(((UINT32)FSM_PARAM_PTR(fsm_msg_ptr)) == ((UINT32)(fsm_msg_ptr + 1)))
     {
         ose_free_mem((UINT8*)fsm_msg_ptr);
@@ -76,20 +76,20 @@ Ose_status ose_fsm_free_msg(Ose_fsm_message* fsm_msg_ptr)
         return OSE_SUCCESS;
     }
 
-    /*濡傛灉parameter瀛樺湪鐢宠鐨勫唴瀛橈紝灏遍噴鏀炬帀*/
+    /*如果parameter存在申请的内存，就释放掉*/
     if(FSM_PARAM_PTR(fsm_msg_ptr) != NULL)
     {
         ose_free_mem((UINT8*)FSM_PARAM_PTR(fsm_msg_ptr));
         FSM_PARAM_PTR(fsm_msg_ptr) = NULL;
     }
-    /*閲婃斁娑堟伅澶?*/
+    /*释放消息头*/
     ose_free_mem((UINT8*)fsm_msg_ptr);
     fsm_msg_ptr = NULL;
     return OSE_SUCCESS;
 }
 /*****************************************************************************
 * Function  : ose_fsm_link_msg
-* Purpose   : 澶嶇敤鏁磋繃fsm娑堟伅
+* Purpose   : 复用整过fsm消息
 * Relation  :
 *
 * Input Parameters:
@@ -99,27 +99,27 @@ Ose_status ose_fsm_free_msg(Ose_fsm_message* fsm_msg_ptr)
 *       N/A                 N/A
 *
 *
-* Return: 杩斿洖鍗虫垚鍔?
+* Return: 返回即成功
 * Note:
 *******************************************************************************/
 Ose_status ose_fsm_link_msg(Ose_fsm_message* fsm_msg_ptr)
 {
     OSE_ASSERT(fsm_msg_ptr != NULL);
 
-    /*鍒ゆ柇鏄惁涓轰竴娈靛紡*/
+    /*判断是否为一段式*/
     if(((UINT32)FSM_PARAM_PTR(fsm_msg_ptr)) == ((UINT32)(fsm_msg_ptr + 1)))
     {
         ose_buf_link_mem((UINT8*)fsm_msg_ptr);
         return OSE_SUCCESS;
     }
 
-    /*濡傛灉parameter瀛樺湪鐢宠鐨勫唴瀛橈紝灏眑ink*/
+    /*如果parameter存在申请的内存，就link*/
     if(FSM_PARAM_PTR(fsm_msg_ptr) != NULL)
     {
         ose_buf_link_mem((UINT8*)FSM_PARAM_PTR(fsm_msg_ptr));
     }
 
-    /*link娑堟伅澶?*/
+    /*link消息头*/
     ose_buf_link_mem((UINT8*)fsm_msg_ptr);
 
     return OSE_SUCCESS;

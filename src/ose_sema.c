@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_sema.c                                                  */
-/* Description   : 信号�?                                                       */
+/* Description   : 信号量                                                       */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -18,7 +18,7 @@ Ose_mutex_id g_ose_sema_lock = OSE_UNAVAILABLE_ID;
 
 /*****************************************************************************
 * Function  : ose_init_sema
-* Purpose   : 信号量模块的初始�?
+* Purpose   : 信号量模块的初始化
 * Relation  :
 *
 * Input Parameters:
@@ -28,8 +28,8 @@ Ose_mutex_id g_ose_sema_lock = OSE_UNAVAILABLE_ID;
 *       N/A                 N/A
 *
 * Return:
-*   OSE_SUCCESS :初始化成�?
-*   OSE_FAILURE :初始化失�?
+*   OSE_SUCCESS :初始化成功
+*   OSE_FAILURE :初始化失败
 * Note:
 *******************************************************************************/
 Ose_status ose_init_sema()
@@ -45,22 +45,22 @@ Ose_status ose_init_sema()
         ose_semaphore[index].value    = 0;
     }
 #endif
-    /*创建一个公共互斥量，OSE用于对ose_semaphore的保�?*/
-    /*互斥量的初始化和信号量初始化，是一个函数顺序调�?*/
+    /*创建一个公共互斥量，OSE用于对ose_semaphore的保护*/
+    /*互斥量的初始化和信号量初始化，是一个函数顺序调用*/
     return ose_create_init_mutex((Ose_sema_name)"OseSemaProt", &g_ose_sema_lock, OSE_TRUE);
 }
 /*****************************************************************************
 * Function  : ose_create_sema
-* Purpose   : 创建信号�?
+* Purpose   : 创建信号量
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   name                Ose_sema_name           In          信号量名�?
-*   flag                Bool                    In          信号量的初时状�?
-*   count               Ose_sema_count          In          信号量的最大计�?
+*   name                Ose_sema_name           In          信号量名称
+*   flag                Bool                    In          信号量的初时状态
+*   count               Ose_sema_count          In          信号量的最大计数
 * Return:
 *   OSE_UNAVAILABLE_ID  :失败
 *   其他                :成功
@@ -72,24 +72,24 @@ Ose_sema_id ose_create_sema(Ose_sema_name name, Ose_sema_count count, Bool flag)
     Ose_status        result = OSE_FAILURE;
     Ose_sema_name     name_ptr;
 
-    /*检查最大计�?*/
+    /*检查最大计数*/
     if(((Ose_sema_count)0) == count || count > SEM_VALUE_MAX)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_create_sema]: create sema count error !!!");
         return OSE_UNAVAILABLE_ID;
     }
 
-    /*进入互斥区，为保护ose_semaphore的访�?*/
+    /*进入互斥区，为保护ose_semaphore的访问*/
     ose_obtain_mutex(g_ose_sema_lock, OSE_WAIT_FOREVER);
 
 #ifdef LINUX_SWITCH
-    /*查找空闲信号量，并创�?*/
+    /*查找空闲信号量，并创建*/
     for(index = 0; index < OSE_MAX_SEMAPHORES; index++)
     {
         /*找到空闲资源*/
         if(ose_semaphore[index].sem == NULL)
         {
-            /*生成信号量名�?*/
+            /*生成信号量名字*/
             if(name == NULL)
             {
                 name_ptr = OSE_SEMA_NAME;
@@ -100,12 +100,12 @@ Ose_sema_id ose_create_sema(Ose_sema_name name, Ose_sema_count count, Bool flag)
             }
             if(flag)
             {
-                /*创建初始为最大值的信号�?*/
+                /*创建初始为最大值的信号量*/
                 ose_semaphore[index].sem = sem_open(name_ptr, O_CREAT, 0644, count);
             }
             else
             {
-                /*创建初始为最小值的信号�?*/
+                /*创建初始为最小值的信号量*/
                 ose_semaphore[index].sem = sem_open(name_ptr, O_CREAT, 0644, 0);
             }
             /*判断是否创建成功*/
@@ -127,7 +127,7 @@ Ose_sema_id ose_create_sema(Ose_sema_name name, Ose_sema_count count, Bool flag)
                 OSE_ERROR(name_ptr);
                 sem_unlink(name_ptr);
             }
-            /*退出循�?*/
+            /*退出循环*/
             break;
         }
     }
@@ -148,7 +148,7 @@ Ose_sema_id ose_create_sema(Ose_sema_name name, Ose_sema_count count, Bool flag)
 }
 /*****************************************************************************
 * Function  : ose_obtain_sema
-* Purpose   : 获取信号�?(get)
+* Purpose   : 获取信号量(get)
 * Relation  :
 *
 * Input Parameters:
@@ -172,20 +172,20 @@ Ose_status ose_obtain_sema(Ose_sema_id sid, Ose_timeout timeout)
     /*检查信号量id*/
     if(sid >= OSE_MAX_SEMAPHORES)
     {
-        ose_trace(OSE_TRACE_ERROR,"[ose_obtain_sema]: obtain sid�?%d !!!",sid);
+        ose_trace(OSE_TRACE_ERROR,"[ose_obtain_sema]: obtain sid：%d !!!",sid);
         return OSE_FAILURE;
     }
 
-    /*进入互斥区，为保护ose_semaphore的访�?*/
+    /*进入互斥区，为保护ose_semaphore的访问*/
     /*ose_obtain_mutex(g_ose_sema_lock, OSE_WAIT_FOREVER);*/
 
-    /*判断信号量是否创�?*/
+    /*判断信号量是否创建*/
     if(OSE_FALSE == ose_is_sema_created(sid))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_obtain_sema]: obtain sid is sema created !!!");
         return OSE_FAILURE;
     }
-/*获取信号�?*/
+/*获取信号量*/
 #ifdef LINUX_SWITCH
     if(timeout == OSE_NO_WAIT)
     {
@@ -218,7 +218,7 @@ Ose_status ose_obtain_sema(Ose_sema_id sid, Ose_timeout timeout)
 }
 /*****************************************************************************
 * Function  : ose_release_sema
-* Purpose   : 释放信号�?(put)
+* Purpose   : 释放信号量(put)
 * Relation  :
 *
 * Input Parameters:
@@ -238,10 +238,10 @@ Ose_status ose_release_sema(Ose_sema_id sid)
     /*检查互斥量id*/
     if(sid >= OSE_MAX_SEMAPHORES)
     {
-        ose_trace(OSE_TRACE_ERROR,"[ose_release_sema]: release sid�?%d !!!",sid);
+        ose_trace(OSE_TRACE_ERROR,"[ose_release_sema]: release sid：%d !!!",sid);
         return OSE_FAILURE;
     }
-    /*判断信号量是否创�?*/
+    /*判断信号量是否创建*/
     if(OSE_FALSE == ose_is_sema_created(sid))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_release_sema]: release sid is sema created !!!");
@@ -249,7 +249,7 @@ Ose_status ose_release_sema(Ose_sema_id sid)
     }
 
 #ifdef LINUX_SWITCH
-    /*释放信号�?*/
+    /*释放信号量*/
    ret_status = sem_post(ose_semaphore[sid].sem);
    if(-1 == ret_status)
    {
@@ -260,7 +260,7 @@ Ose_status ose_release_sema(Ose_sema_id sid)
 }
 /*****************************************************************************
 * Function  : ose_delete_sema
-* Purpose   : 删除信号�?
+* Purpose   : 删除信号量
 * Relation  :
 *
 * Input Parameters:
@@ -273,8 +273,8 @@ Ose_status ose_release_sema(Ose_sema_id sid)
 *   OSE_SUCCESS :成功
 *   OSE_FAILURE :失败
 * Note:     只要id不非法，信号量创建；那么该函数不会返回OSE_FAILURE
-    其他异常，OSE阻塞任务，不返回�?
-    删除信号量带来的临界问题，需要上层考虑�?
+    其他异常，OSE阻塞任务，不返回。
+    删除信号量带来的临界问题，需要上层考虑。
 *******************************************************************************/
 Ose_status ose_delete_sema(Ose_sema_id sid)
 {
@@ -282,10 +282,10 @@ Ose_status ose_delete_sema(Ose_sema_id sid)
     /*检查互斥量id*/
     if(sid >= OSE_MAX_SEMAPHORES)
     {
-        ose_trace(OSE_TRACE_ERROR,"[ose_delete_sema]: sid�?%d !!!",sid);
+        ose_trace(OSE_TRACE_ERROR,"[ose_delete_sema]: sid：%d !!!",sid);
         return OSE_FAILURE;
     }
-    /*判断信号量是否创�?*/
+    /*判断信号量是否创建*/
     if(OSE_FALSE == ose_is_sema_created(sid))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_delete_sema]: sid is sema created !!!");
@@ -324,7 +324,7 @@ Ose_status ose_delete_sema(Ose_sema_id sid)
 *
 * Return:
 *   OSE_TRUE    :创建
-*   OSE_FALSE   :没创�?
+*   OSE_FALSE   :没创建
 * Note:
 *******************************************************************************/
 Bool ose_is_sema_created(Ose_sema_id sid)
@@ -339,7 +339,7 @@ Bool ose_is_sema_created(Ose_sema_id sid)
 }
 /*****************************************************************************
 * Function  : ose_sema_delete_all
-* Purpose   : 删除所有已使用信号�?
+* Purpose   : 删除所有已使用信号量
 * Relation  :
 *
 * Input Parameters:

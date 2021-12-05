@@ -1,6 +1,7 @@
 /*******************************************************************************/
+/*******************************************************************************/
 /* Filename      : ose_utl.c                                                   */
-/* Description   : 杈呭姪鍑芥暟                                                     */
+/* Description   : 辅助函数                                                     */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -13,7 +14,7 @@
 
 /*****************************************************************************
 * Function  : ose_get_system_time
-* Purpose   : 鑾峰彇绯荤粺鏃堕棿鎼?
+* Purpose   : 获取系统时间搓
 * Relation  :
 *
 * Input Parameters:
@@ -31,14 +32,14 @@ UINT32 ose_get_system_time(void)
     struct timeval tv;
 
     gettimeofday(&tv,NULL);
-    //姣
+    //毫秒
     sys_time = tv.tv_sec*1000 + tv.tv_usec/1000;
 #endif
     return sys_time;
 }
 /*****************************************************************************
 * Function  : ose_btol_u16
-* Purpose   :灏?16浣嶆暟鎸夌収瀛楄妭鍏堝悗鍊掓崲
+* Purpose   :将16位数按照字节先后倒换
 * Relation  :
 *
 * Input Parameters:
@@ -59,7 +60,7 @@ UINT16 ose_btol_u16(UINT16 value)
 }
 /*****************************************************************************
 * Function  : ose_btol_u32
-* Purpose   :灏?32浣嶆暟鎸夌収瀛楄妭鍏堝悗鍊掓崲
+* Purpose   :将32位数按照字节先后倒换
 * Relation  :
 *
 * Input Parameters:

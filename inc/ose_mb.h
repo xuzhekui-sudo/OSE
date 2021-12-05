@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_mb.h                                                   */
-/* Description   : 閭                                                        */
+/* Description   : 邮箱                                                        */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -10,14 +10,14 @@
 #ifndef OSE_MB_H
 #define OSE_MB_H
 
-/*閭鐨勪俊鍙烽噺鍜屼簰鏂ラ噺鍚?*/
+/*邮箱的信号量和互斥量名*/
 typedef struct Ose_ext_mb_name_st
 {
     char           sema_lock_wr_name[30];
     char           sema_lock_rd_name[30];
     char           mutex_name[30];
 } Ose_ext_mb_name;
-/*浠诲姟闂撮偖绠辩殑鎺у埗瀛楁*/
+/*任务间邮箱的控制字段*/
 typedef struct Ose_ext_mb_st
 {
     Ose_fixed_queue* blist_ptr;
@@ -35,7 +35,7 @@ Ose_status ose_create_mb(Ose_mb_id, UINT32);
 Ose_status ose_send_to_mb_head(Ose_mb_id, Ose_fsm_message*, Ose_timeout);
 Ose_status ose_send_to_mb_tail(Ose_mb_id, Ose_fsm_message*, Ose_timeout);
 Bool       ose_is_mb_created(Ose_mb_id);
-UINT32     ose_get_spare_mb(Ose_mb_id); //涓嶅彲鐢ㄤ簬涓柇
+UINT32     ose_get_spare_mb(Ose_mb_id); //不可用于中断
 Ose_status ose_delete_mb(Ose_mb_id);
 Ose_status ose_mb_delete_all(void);
 

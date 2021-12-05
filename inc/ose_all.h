@@ -12,33 +12,33 @@
 
 #define LINUX_SWITCH                    1
 
-/*鍩虹绫诲瀷鍜屾暟鎹粨鏋勫畾涔?*/
+/*基础类型和数据结构定义*/
 #include <ose_type.h>
-/*OSE鐨勬帴鍙ｅご鏂囦欢*/
+/*OSE的接口头文件*/
 #include <ose_pub.h>
-/*OSE鐨勯厤缃ご鏂囦欢*/
+/*OSE的配置头文件*/
 #include <ose_con.h>
-/*OSE娑夊強鍒扮殑閿欒鐮佸畾涔?*/
+/*OSE涉及到的错误码定义*/
 #include <ose_errno.h>
-/*鍒濆鍖栨ā鍧楃殑澶存枃浠?*/
+/*初始化模块的头文件*/
 #include <ose_init.h>
-/*淇″彿閲?*/
+/*信号量*/
 #include <ose_sema.h>
-/*浜掓枼閲?*/
+/*互斥量*/
 #include <ose_mutex.h>
-/*FSM娑堟伅鐩稿叧瀹氫箟鍜屾帴鍙?*/
+/*FSM消息相关定义和接口*/
 #include <ose_fsm.h>
-/*OSE浣跨敤鐨勬墍鏈夐摼琛ㄥ拰闃熷垪鐩稿叧瀹氫箟鍜屾帴鍙?*/
+/*OSE使用的所有链表和队列相关定义和接口*/
 #include <ose_list.h>
-/*浠诲姟闂撮偖绠卞拰浠诲姟鍐呴偖绠辩浉鍏冲畾涔夊拰鎺ュ彛*/
+/*任务间邮箱和任务内邮箱相关定义和接口*/
 #include <ose_mb.h>
-/*浠诲姟绠＄悊*/
+/*任务管理*/
 #include <ose_task.h>
-/*OSE鎻愪緵鐨勮緟鍔╁姛鑳界浉鍏冲畾涔夊拰鎺ュ彛*/
+/*OSE提供的辅助功能相关定义和接口*/
 #include <ose_utl.h>
-/*闈欐�佸唴瀛樼鐞嗙浉鍏冲畾涔?*/
+/*静态内存管理相关定义*/
 #include <ose_buf.h>
-/*瀹氭椂鍣ㄧ浉鍏冲畾涔夊拰鎺ュ彛*/
+/*定时器相关定义和接口*/
 #include <ose_timer.h>
 #include <ose_trace.h>
 #include <ose_link.h>

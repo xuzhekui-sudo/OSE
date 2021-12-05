@@ -10,78 +10,78 @@
 #ifndef OSE_BUF_H
 #define OSE_BUF_H
 
-/*å†…å­˜ç°‡æè¿°ç»“æž?*/
+/*ÄÚ´æ´ØÃèÊö½á¹¹*/
 typedef struct Ose_mem_desc_tbl_st
 {
     UINT32 block_size;
     UINT32 block_nums;
 } Ose_mem_desc_tbl;
 
-/*blockæŽ§åˆ¶å­—æ®µ*/
+/*block¿ØÖÆ×Ö¶Î*/
 typedef struct Ose_block_st
 {
-    UINT8                reserved; /*ä¿ç•™å­—æ®µ*/
+    UINT8                reserved; /*±£Áô×Ö¶Î*/
     UINT8                pool_id;
     UINT8                cl_id;
     UINT8                used_cnt;
-    struct Ose_block_st* next_blk_ptr; /*æŒ‡å‘ä¸‹ä¸€ä¸ªblock*/
+    struct Ose_block_st* next_blk_ptr; /*Ö¸ÏòÏÂÒ»¸öblock*/
 
 #ifdef FEA_BUFFER_LEAK_2_SWITCH
-    UINT32 getfile;                          /*ç”³è¯·è€…çš„æ–‡ä»¶å?*/
-    UINT32 linkfreefile;                     /*å½“used_cntä½?0æ—¶ï¼Œè¡¨é‡Šæ”¾è€…çš„æ–‡ä»¶å?;å¤§äºŽ0ä½linkè€…çš„æ–‡ä»¶å?*/
-    UINT16 getline;                          /*ç”³è¯·è€…çš„è¡Œå·*/
-    UINT16 linkfreeline;                     /*å½“used_cntä½?0æ—¶ï¼Œè¡¨é‡Šæ”¾è€…çš„è¡Œå·;å¤§äºŽ0ä½linkè€…çš„è¡Œå·*/
-    UINT32 real_size;                        /*ç”³è¯·è¯¥å†…å­˜çš„çœŸå®žé•¿åº¦*/
-    /*Uint16                  instance_id;*/ /*ä½œç”¨ä¸æ˜Žæ˜¾ï¼Œç©ºé—´ç»™ç³»ç»Ÿæ—¶é—?*/
+    UINT32 getfile;                          /*ÉêÇëÕßµÄÎÄ¼þºÅ*/
+    UINT32 linkfreefile;                     /*µ±used_cntÎ»0Ê±£¬±íÊÍ·ÅÕßµÄÎÄ¼þºÅ;´óÓÚ0Î»linkÕßµÄÎÄ¼þºÅ*/
+    UINT16 getline;                          /*ÉêÇëÕßµÄÐÐºÅ*/
+    UINT16 linkfreeline;                     /*µ±used_cntÎ»0Ê±£¬±íÊÍ·ÅÕßµÄÐÐºÅ;´óÓÚ0Î»linkÕßµÄÐÐºÅ*/
+    UINT32 real_size;                        /*ÉêÇë¸ÃÄÚ´æµÄÕæÊµ³¤¶È*/
+    /*Uint16                  instance_id;*/ /*×÷ÓÃ²»Ã÷ÏÔ£¬¿Õ¼ä¸øÏµÍ³Ê±¼ä*/
     UINT32 systime;
 #endif
 
     UINT8* usr_data;
 } Ose_block;
 
-/*å†…å­˜ç°‡æŽ§åˆ¶å­—æ®?*/
+/*ÄÚ´æ´Ø¿ØÖÆ×Ö¶Î*/
 typedef struct Ose_cl_info_st
 {
-    UINT32 blk_nums; /*å†…å­˜ç°‡é‡Œblockçš„æ•°é‡?*/
-    UINT32 blk_size; /*æ¯ä¸ªblockçš„å¤§å°?*/
+    UINT32 blk_nums; /*ÄÚ´æ´ØÀïblockµÄÊýÁ¿*/
+    UINT32 blk_size; /*Ã¿¸öblockµÄ´óÐ¡*/
 
-    Ose_block* blk_cont_head_ptr; /*blockæŽ§åˆ¶å¤´çš„èµ·å§‹åœ°å€*/
-    void*      blk_user_head_ptr; /*blockç”¨æˆ·åŒºåŸŸçš„èµ·å§‹åœ°å€*/
+    Ose_block* blk_cont_head_ptr; /*block¿ØÖÆÍ·µÄÆðÊ¼µØÖ·*/
+    void*      blk_user_head_ptr; /*blockÓÃ»§ÇøÓòµÄÆðÊ¼µØÖ·*/
 
-    UINT32     free_num;          /*ç©ºé—²blockçš„æ•°é‡?*/
-    Ose_block* free_head_blk_ptr; /*ç©ºé—²å†…å­˜blockçš„å¤´ç»“ç‚¹*/
-    Ose_block* free_tail_blk_ptr; /*ç©ºé—²å†…å­˜çš„å°¾éƒ¨ç»“ç‚?*/
+    UINT32     free_num;          /*¿ÕÏÐblockµÄÊýÁ¿*/
+    Ose_block* free_head_blk_ptr; /*¿ÕÏÐÄÚ´æblockµÄÍ·½áµã*/
+    Ose_block* free_tail_blk_ptr; /*¿ÕÏÐÄÚ´æµÄÎ²²¿½áµã*/
 } Ose_cl_info;
 
-/*å†…å­˜æ± æŽ§åˆ¶å­—æ®?*/
+/*ÄÚ´æ³Ø¿ØÖÆ×Ö¶Î*/
 typedef struct Ose_pool_info_st
 {
-    UINT32       cl_nums;  /*å†…å­˜ç°‡çš„ä¸ªæ•°*/
-    UINT32       max_size; /*è¯¥å†…å­˜æ± æä¾›çš„æœ€å¤§block*/
-    UINT8*       size_map; /*å†…å­˜åŒ¹é…è¡¨åœ°å€*/
-    Ose_cl_info* cl_info;  /*ç¬¬ä¸€ä¸ªå†…å­˜ç°‡æŽ§åˆ¶å­—æ®µçš„åœ°å€*/
+    UINT32       cl_nums;  /*ÄÚ´æ´ØµÄ¸öÊý*/
+    UINT32       max_size; /*¸ÃÄÚ´æ³ØÌá¹©µÄ×î´óblock*/
+    UINT8*       size_map; /*ÄÚ´æÆ¥Åä±íµØÖ·*/
+    Ose_cl_info* cl_info;  /*µÚÒ»¸öÄÚ´æ´Ø¿ØÖÆ×Ö¶ÎµÄµØÖ·*/
 } Ose_pool_info;
 
-/*æž„é€ å†…å­˜æ± æ—¶éœ€è¦å¯¹å¤–ç”³è¯?/é‡Šæ”¾å†…å­˜*/
-/*å› ä¸åŒå†…å­˜æ± å¯¹ä½¿ç”¨çš„å¤–éƒ¨å†…å­˜æœ‰éœ€æ±?*/
-/*å› æ­¤å¯ä»¥æ ¹æ®å®žé™…å¤–éƒ¨å†…å­˜çš„æƒ…å†µå®šåˆ¶ç”³è¯·é‡Šæ”¾å‡½æ•?*/
+/*¹¹ÔìÄÚ´æ³ØÊ±ÐèÒª¶ÔÍâÉêÇë/ÊÍ·ÅÄÚ´æ*/
+/*Òò²»Í¬ÄÚ´æ³Ø¶ÔÊ¹ÓÃµÄÍâ²¿ÄÚ´æÓÐÐèÇó*/
+/*Òò´Ë¿ÉÒÔ¸ù¾ÝÊµ¼ÊÍâ²¿ÄÚ´æµÄÇé¿ö¶¨ÖÆÉêÇëÊÍ·Åº¯Êý*/
 
-/*å†…å­˜blockçš„ç”³è¯·å’Œé‡Šæ”¾å‡½æ•°*/
+/*ÄÚ´æblockµÄÉêÇëºÍÊÍ·Åº¯Êý*/
 typedef void* (*Ose_malloc_block_mem_pf)(UINT32 size);
 typedef void (*Ose_free_block_mem_pf)(UINT8* buf_ptr);
 
-/*å†…å­˜æ± çš„æè¿°*/
+/*ÄÚ´æ³ØµÄÃèÊö*/
 typedef struct Ose_pool_st
 {
     Ose_mem_desc_tbl*       pstPoolDesc;
     Ose_pool_info           stPoolInfo;
-    Ose_pool_id             ucPoolId; /*å¿…é¡»ä»?0å¼€å§‹ç¼–å?*/
-    /***********å†…å­˜æ± å±žæ€?*********/
-    Bool                    bPoolLock; /*æ˜¯å¦äº’æ–¥,OSE_FALSEè¡¨ç¤ºä¸äº’æ–?*/
+    Ose_pool_id             ucPoolId; /*±ØÐë´Ó0¿ªÊ¼±àºÅ*/
+    /***********ÄÚ´æ³ØÊôÐÔ*********/
+    Bool                    bPoolLock; /*ÊÇ·ñ»¥³â,OSE_FALSE±íÊ¾²»»¥³â*/
     Ose_mutex_id            uiPoolLock;
-    UINT32                  UiAlignSize; /*æ¯ä¸ªblockèµ·å§‹å’Œç»“æŸåœ°å€å¯¹é½çš„å­—èŠ‚æ•°*/
-    UINT32                  uiReserveOseHead; /*æ¯ä¸ªoseæŽ§åˆ¶å¤´é¢å¤–ä¿ç•™çš„å­—èŠ‚æ•?*/
-    Ose_malloc_block_mem_pf pfMallocBlockMem; /*ç”³è¯·blockçš„å†…å­˜ç©ºé—?*/
+    UINT32                  UiAlignSize; /*Ã¿¸öblockÆðÊ¼ºÍ½áÊøµØÖ·¶ÔÆëµÄ×Ö½ÚÊý*/
+    UINT32                  uiReserveOseHead; /*Ã¿¸öose¿ØÖÆÍ·¶îÍâ±£ÁôµÄ×Ö½ÚÊý*/
+    Ose_malloc_block_mem_pf pfMallocBlockMem; /*ÉêÇëblockµÄÄÚ´æ¿Õ¼ä*/
     Ose_free_block_mem_pf   pfFreeBlockMem;
 } Ose_pool;
 
@@ -96,24 +96,24 @@ typedef struct Ose_block_peak_st
 
 #define HL_INSTANCE_ID   0
 
-/*OSEçš„å†…å­˜blockä¿ç•™æ ‡å¿—*/
+/*OSEµÄÄÚ´æblock±£Áô±êÖ¾*/
 #define OSE_BLK_RESERVED_VALUE     0xcf
-/*linkçš„æœ€å¤§æ¬¡æ•°é™åˆ?*/
+/*linkµÄ×î´ó´ÎÊýÏÞÖÆ*/
 #define OSE_MAX_LINK_BUFF_TIMES    250
-/*OSEå†…å­˜æ± çš„æœ€å°æŸ¥æ‰¾ç²¾åº?*/
+/*OSEÄÚ´æ³ØµÄ×îÐ¡²éÕÒ¾«¶È*/
 #define OSE_MEM_POOL_PAGE_SIZE     1 /*128*/
-/*æ‰¹é‡å†…å­˜æ“ä½œæ—¶ï¼Œä¸€æ¬¡æœ€å¤šæ“ä½œçš„æ•°é‡*/
+/*ÅúÁ¿ÄÚ´æ²Ù×÷Ê±£¬Ò»´Î×î¶à²Ù×÷µÄÊýÁ¿*/
 #define OSE_MULTI_MEM_MAX_NUM      64
-/*å†…éƒ¨å®?*/ /*æ“ä½œç±»åž‹*/
+/*ÄÚ²¿ºê*/ /*²Ù×÷ÀàÐÍ*/
 #define OSE_BLOCK_CHECK            0
 #define OSE_BLOCK_PRINT            1
 #define OSE_BLOCK_GET              0
 #define OSE_BLOCK_LINK             1
 #define OSE_BLOCK_FREE             2
-/*å‘ä¸Šå–æ•´*/
+/*ÏòÉÏÈ¡Õû*/
 #define OSE_MEM_ALIGN(size, agsize) ((((size) + (agsize - 1)) / agsize) * agsize)
 
-/*å†…å­˜æ± äº’æ–?*/
+/*ÄÚ´æ³Ø»¥³â*/
 #ifdef LINUX_SWITCH
 #define ose_pool_lock_define
 #define ose_pool_lock_get(pid)  \

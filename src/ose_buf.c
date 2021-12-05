@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_buf.c                                                   */
-/* Description   : 内存管理                                                    */
+/* Description   : �ڴ����                                                    */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -17,7 +17,7 @@ extern Ose_pool ose_pool[];
 
 /*****************************************************************************
 * Function  : ose_init_pools
-* Purpose   : 内存池管理模块初始化
+* Purpose   : �ڴ�ع���ģ���ʼ��
 * Relation  :
 *
 * Input Parameters:
@@ -28,8 +28,8 @@ extern Ose_pool ose_pool[];
 *
 *
 * Return:
-*   OSE_SUCCESS 初始化成�?
-*   OSE_FAILURE 初始化失�?
+*   OSE_SUCCESS ��ʼ���ɹ�
+*   OSE_FAILURE ��ʼ��ʧ��
 * Note:
 *******************************************************************************/
 Ose_status ose_init_pools()
@@ -37,7 +37,7 @@ Ose_status ose_init_pools()
     Ose_pool_id id;
     Ose_status  ret;
 
-    /*初始化OSE和系统的内存分配关系*/
+    /*��ʼ��OSE��ϵͳ���ڴ�����ϵ*/
     //ose_init_mem();
 
     for(id = 0; id < OSE_MAX_POOLS; id++)
@@ -48,7 +48,7 @@ Ose_status ose_init_pools()
         ose_pool[id].stPoolInfo.cl_info  = (Ose_cl_info*)NULL;
     }
 
-    /*初始化内存池*/
+    /*��ʼ���ڴ��*/
     for(id = 0; id < OSE_MAX_POOLS; id++)
     {
         OSE_ASSERT(ose_pool[id].ucPoolId == id);
@@ -62,7 +62,7 @@ Ose_status ose_init_pools()
 }
 /*****************************************************************************
 * Function  : ose_init_block_pool
-* Purpose   : 内存池初始化
+* Purpose   : �ڴ�س�ʼ��
 * Relation  :
 *
 * Input Parameters:
@@ -73,8 +73,8 @@ Ose_status ose_init_pools()
 *
 *
 * Return:
-*   OSE_SUCCESS 初始化成�?
-*   OSE_FAILURE 初始化失�?
+*   OSE_SUCCESS ��ʼ���ɹ�
+*   OSE_FAILURE ��ʼ��ʧ��
 * Note:
 *******************************************************************************/
 Ose_status ose_init_block_pool(Ose_pool_id pool_id)
@@ -82,17 +82,17 @@ Ose_status ose_init_block_pool(Ose_pool_id pool_id)
     Ose_pool_info* pool_ptr = &ose_pool[pool_id].stPoolInfo;
     Ose_status     ret;
 
-    /*按照对齐大小，调整配置大�?*/
+    /*���ն����С���������ô�С*/
     ose_init_pool_config(pool_id);
 
-    /*为每个内存簇申请控制字段*/
+    /*Ϊÿ���ڴ����������ֶ�*/
     pool_ptr->cl_info = (Ose_cl_info*)malloc(sizeof(Ose_cl_info) * pool_ptr->cl_nums);
     if(pool_ptr->cl_info == NULL)
     {
         OSE_ERROR("ose_init_block_pool cl_info ERROR:");
         return OSE_NO_MEM;
     }
-    /*申请内存大小匹配�?*/
+    /*�����ڴ��Сƥ���*/
     pool_ptr->size_map = (UINT8*)malloc((pool_ptr->max_size / OSE_MEM_POOL_PAGE_SIZE) + 1);
     if(pool_ptr->size_map == NULL)
     {
@@ -100,27 +100,27 @@ Ose_status ose_init_block_pool(Ose_pool_id pool_id)
         return OSE_NO_MEM;
     }
 
-    /*初始化内存簇*/
+    /*��ʼ���ڴ��*/
     ret = ose_init_cl(pool_id);
     if(ret != OSE_SUCCESS)
     {
         return ret;
     }
 
-    /*初始化内存block*/
+    /*��ʼ���ڴ�block*/
     ose_init_block(pool_id);
 
-    /*初始化内存匹配表*/
+    /*��ʼ���ڴ�ƥ���*/
     ose_init_block_map(pool_id);
 
-    /*初始化互斥量*/
+    /*��ʼ��������*/
     ose_init_pool_lock(pool_id);
 
     return OSE_SUCCESS;
 }
 /*****************************************************************************
 * Function  : ose_init_pool_config
-* Purpose   : 内存簇配置的初始�?
+* Purpose   : �ڴ�����õĳ�ʼ��
 * Relation  :
 *
 * Input Parameters:
@@ -140,44 +140,44 @@ void ose_init_pool_config(Ose_pool_id pool_id)
     Ose_pool_info*    pool_ptr = &ose_pool[pool_id].stPoolInfo;
 
     /*
-            *   为保证每个用户区的起始和结束地址都能整除uiMemAlignSize
+            *   Ϊ��֤ÿ���û�������ʼ�ͽ�����ַ��������uiMemAlignSize
             *
             *   |-uiOseHeadSize--|__________user_____________|-uiOseHeadSize--|__________user_____________|
             *
-            *   首先保证ose头和用户区大小都是uiMemAlignSize的整数�?
-            *   只要使第一个用户区起始为uiMemAlignSize整数�?
-            *   那后续的所有用户区起始地址都可以保�?
+            *   ���ȱ�֤oseͷ���û�����С����uiMemAlignSize��������
+            *   ֻҪʹ��һ���û�����ʼΪuiMemAlignSize������
+            *   �Ǻ����������û�����ʼ��ַ�����Ա�֤
         */
 
-    /*前后向对齐的大小*/
+    /*ǰ�������Ĵ�С*/
     uiMemAlignSize = ose_pool[pool_id].UiAlignSize;
 
-    /*计算内存池的最大block，以及簇数量*/
+    /*�����ڴ�ص����block���Լ�������*/
     while((tbl_ptr->block_size != 0) && (tbl_ptr->block_nums != 0))
     {
-        /*计算block扩展后的大小*/
+        /*����block��չ��Ĵ�С*/
         tbl_ptr->block_size = (OSE_MEM_ALIGN(tbl_ptr->block_size, uiMemAlignSize));
 
-        /*包括ose保留头的大小*/
+        /*����ose����ͷ�Ĵ�С*/
         tbl_ptr->block_size += ose_pool[pool_id].uiReserveOseHead;
 
-        /*簇的数量�?1*/
+        /*�ص�������1*/
         pool_ptr->cl_nums++;
 
-        /*后面簇的大小小于前面，配置表错误*/
+        /*����صĴ�СС��ǰ�棬���ñ�����*/
         OSE_ASSERT(tbl_ptr->block_size >= pool_ptr->max_size);
 
-        /*记录下本池最大的block大小*/
+        /*��¼�±�������block��С*/
         pool_ptr->max_size = tbl_ptr->block_size;
 
         tbl_ptr++;
     }
-    /*一个内存池必须至少一个簇*/
+    /*һ���ڴ�ر�������һ����*/
     OSE_ASSERT(pool_ptr->cl_nums != 0);
 }
 /*****************************************************************************
 * Function  : ose_init_cl
-* Purpose   : 初始化内存簇控制字段
+* Purpose   : ��ʼ���ڴ�ؿ����ֶ�
 * Relation  :
 *
 * Input Parameters:
@@ -188,8 +188,8 @@ void ose_init_pool_config(Ose_pool_id pool_id)
 *
 *
 * Return:
-*   OSE_SUCCESS 初始化成�?
-*   OSE_FAILURE 初始化失�?
+*   OSE_SUCCESS ��ʼ���ɹ�
+*   OSE_FAILURE ��ʼ��ʧ��
 * Note:
 *******************************************************************************/
 Ose_status ose_init_cl(Ose_pool_id pool_id)
@@ -203,15 +203,15 @@ Ose_status ose_init_cl(Ose_pool_id pool_id)
     Ose_pool_info*    pool_ptr = &ose_pool[pool_id].stPoolInfo;
     Ose_mem_desc_tbl* tbl_ptr  = ose_pool[pool_id].pstPoolDesc;
 
-    /*用户区起始的对齐大小*/
+    /*�û�����ʼ�Ķ����С*/
     uiMemAlignSize = ose_pool[pool_id].UiAlignSize;
 
-    /*用户区前面的ose控制头大�?*/
+    /*�û���ǰ���ose����ͷ��С*/
     uiOseHeadSize = ose_pool[pool_id].uiReserveOseHead + sizeof(Ose_block*);
-    /*为了保证用户区的前后地址对齐uiMemAlignSize，对uiOseHeadSize进行取整*/
+    /*Ϊ�˱�֤�û�����ǰ���ַ����uiMemAlignSize����uiOseHeadSize����ȡ��*/
     uiOseHeadSize = OSE_MEM_ALIGN(uiOseHeadSize, uiMemAlignSize);
-    /*不能为了简�?,而更新全局变量里的uiReserveOseHead*/
-    /*    uiOseHeadSize、uiMemAlignSize和uiReserveOseHead等关�?
+    /*����Ϊ�˼�,������ȫ�ֱ������uiReserveOseHead*/
+    /*    uiOseHeadSize��uiMemAlignSize��uiReserveOseHead�ȹ�ϵ
             *
             *   |__________|--sizeof(Ose_block*)--|~~~uiReserveOseHead~~~  |
             *                                                            /\
@@ -224,19 +224,19 @@ Ose_status ose_init_cl(Ose_pool_id pool_id)
             *   |<---------------uiMemAlignSize * n---------------------->|
         */
 
-    /*初始化内存簇控制字段*/
+    /*��ʼ���ڴ�ؿ����ֶ�*/
     for(cl_index = 0; cl_index < pool_ptr->cl_nums; cl_index++)
     {
-        /*初始化簇控制字段*/
+        /*��ʼ���ؿ����ֶ�*/
         pool_ptr->cl_info[cl_index].blk_nums = tbl_ptr->block_nums;
         pool_ptr->cl_info[cl_index].blk_size = tbl_ptr->block_size;
         pool_ptr->cl_info[cl_index].free_num = tbl_ptr->block_nums;
 
-        /*一个block对应一个控制头,最后预留一对ose的控制字�?*/
-        /*多申请uiMemAlignSize大小的内存，
-                *一定能让第一个用户区起始地址被uiMemAlignSize整除*/
+        /*һ��block��Ӧһ������ͷ,���Ԥ��һ��ose�Ŀ����ֶ�*/
+        /*������uiMemAlignSize��С���ڴ棬
+                *һ�����õ�һ���û�����ʼ��ַ��uiMemAlignSize����*/
 
-        /*为block控制头申请内�?*/
+        /*Ϊblock����ͷ�����ڴ�*/
         uiMallocSize = sizeof(Ose_block) * (tbl_ptr->block_nums + 1);
         temp_ptr     = malloc(uiMallocSize);
         if(temp_ptr == NULL)
@@ -248,7 +248,7 @@ Ose_status ose_init_cl(Ose_pool_id pool_id)
         pool_ptr->cl_info[cl_index].free_head_blk_ptr = (Ose_block*)temp_ptr;
         pool_ptr->cl_info[cl_index].free_tail_blk_ptr =
             pool_ptr->cl_info[cl_index].free_head_blk_ptr + (tbl_ptr->block_nums - 1);
-        /*为内存簇的block申请内存*/
+        /*Ϊ�ڴ�ص�block�����ڴ�*/
         uiMallocSize =
             (tbl_ptr->block_size + uiOseHeadSize - ose_pool[pool_id].uiReserveOseHead) * tbl_ptr->block_nums +
             uiMemAlignSize + uiOseHeadSize;
@@ -261,7 +261,7 @@ Ose_status ose_init_cl(Ose_pool_id pool_id)
         mem_total_size += uiMallocSize;
         pool_ptr->cl_info[cl_index].blk_user_head_ptr = temp_ptr;
 
-        /*下一个簇的配�?*/
+        /*��һ���ص�����*/
         tbl_ptr++;
     }
     ose_trace(OSE_TRACE_INFO,"%d mem pool total size:%f KB",pool_id,mem_total_size/1024);
@@ -269,7 +269,7 @@ Ose_status ose_init_cl(Ose_pool_id pool_id)
 }
 /*****************************************************************************
 * Function  : ose_init_block
-* Purpose   : 初始化block
+* Purpose   : ��ʼ��block
 * Relation  :
 *
 * Input Parameters:
@@ -286,36 +286,36 @@ void ose_init_block(Ose_pool_id pool_id)
 {
     UINT32 cl_index, blk_index, uiMemAlignSize, uiOseHeadSize;
 
-    Ose_block*  pstBlock;  /*ose控制头的地址*/
-    Ose_block** ppstBlock; /*用户区前面的控制头，它指向真实的ose控制�?*/
+    Ose_block*  pstBlock;  /*ose����ͷ�ĵ�ַ*/
+    Ose_block** ppstBlock; /*�û���ǰ��Ŀ���ͷ����ָ����ʵ��ose����ͷ*/
 
     Ose_pool_info* pool_ptr = &ose_pool[pool_id].stPoolInfo;
 
     uiMemAlignSize = ose_pool[pool_id].UiAlignSize;
 
-    /*为了保证用户区的前后地址对齐uiMemAlignSize，对uiOseHeadSize进行取整*/
+    /*Ϊ�˱�֤�û�����ǰ���ַ����uiMemAlignSize����uiOseHeadSize����ȡ��*/
     uiOseHeadSize = ose_pool[pool_id].uiReserveOseHead + sizeof(Ose_block*);
     uiOseHeadSize = OSE_MEM_ALIGN(uiOseHeadSize, uiMemAlignSize);
 
     for(cl_index = 0; cl_index < pool_ptr->cl_nums; cl_index++)
     {
-        /*取得第一个block的地址*/
+        /*ȡ�õ�һ��block�ĵ�ַ*/
         ppstBlock = (Ose_block**)pool_ptr->cl_info[cl_index].blk_user_head_ptr;
 
-        /*为第一个block偏移，使得它的用户区起始能整除uiMemAlignSize*/
+        /*Ϊ��һ��blockƫ�ƣ�ʹ�������û�����ʼ������uiMemAlignSize*/
         ppstBlock = (Ose_block**)OSE_MEM_ALIGN(((UINT32)ppstBlock) + uiOseHeadSize, uiMemAlignSize);
         ppstBlock = (Ose_block**)(((UINT32)ppstBlock) - ose_pool[pool_id].uiReserveOseHead - sizeof(Ose_block*));
 
-        /*取得第一个block控制头的地址*/
+        /*ȡ�õ�һ��block����ͷ�ĵ�ַ*/
         pstBlock = pool_ptr->cl_info[cl_index].blk_cont_head_ptr;
 
-        /*一个pstBlock对应一个ppstBlock*/
+        /*һ��pstBlock��Ӧһ��ppstBlock*/
         for(blk_index = 0; blk_index < pool_ptr->cl_info[cl_index].blk_nums; blk_index++)
         {
-            /*用户区前面一个指针指向真实的block控制�?*/
+            /*�û���ǰ��һ��ָ��ָ����ʵ��block����ͷ*/
             *ppstBlock = pstBlock;
 
-            /*对block控制头进行初始化*/
+            /*��block����ͷ���г�ʼ��*/
             pstBlock->reserved     = OSE_BLK_RESERVED_VALUE;
             pstBlock->pool_id      = pool_id;
             pstBlock->cl_id        = (UINT8)cl_index;
@@ -331,20 +331,20 @@ void ose_init_block(Ose_pool_id pool_id)
             pstBlock->systime      = 0;
 #endif
 
-            /*两个block控制字段向后�?*/
+            /*����block�����ֶ������*/
 
-            /*用户区的控制�?*/
+            /*�û����Ŀ���ͷ*/
             ppstBlock = (Ose_block**)(pstBlock->usr_data + pool_ptr->cl_info[cl_index].blk_size + uiOseHeadSize);
             ppstBlock = (Ose_block**)(((UINT32)ppstBlock) - ose_pool[pool_id].uiReserveOseHead - sizeof(Ose_block*));
 
-            /*ose真实控制头向后移*/
+            /*ose��ʵ����ͷ�����*/
             pstBlock++;
         }
-        /*最后一个有效block控制头的下一节点为空*/
+        /*���һ����Чblock����ͷ����һ�ڵ�Ϊ��*/
         pstBlock--;
         pstBlock->next_blk_ptr = NULL;
 
-        /*设置最后预留的一对控制头*/
+        /*�������Ԥ����һ�Կ���ͷ*/
         pstBlock++;
         *ppstBlock             = pstBlock;
         pstBlock->reserved     = OSE_BLK_RESERVED_VALUE;
@@ -365,7 +365,7 @@ void ose_init_block(Ose_pool_id pool_id)
 }
 /*****************************************************************************
 * Function  : ose_init_mem_map
-* Purpose   : 内存匹配表的初始�?
+* Purpose   : �ڴ�ƥ����ĳ�ʼ��
 * Relation  :
 *
 * Input Parameters:
@@ -375,7 +375,7 @@ void ose_init_block(Ose_pool_id pool_id)
 *       N/A                 N/A
 *
 *
-* Return: �?
+* Return: ��
 * Note:
 *******************************************************************************/
 void ose_init_block_map(Ose_pool_id pool_id)
@@ -389,11 +389,11 @@ void ose_init_block_map(Ose_pool_id pool_id)
     current_cl_index = 0;
     map_index_end    = pool_ptr->max_size / OSE_MEM_POOL_PAGE_SIZE;
 
-    /*内存匹配表里，一个字节代码一个索�?*/
-    /*一个索引至少代表索引乘以OSE_MEM_POOL_PAGE_SIZE大小的内�?*/
+    /*�ڴ�ƥ����һ���ֽڴ���һ������*/
+    /*һ���������ٴ�����������OSE_MEM_POOL_PAGE_SIZE��С���ڴ�*/
     for(map_index = 0; map_index <= map_index_end; map_index++)
     {
-        /*计算当前索引需要的内存大小*/
+        /*���㵱ǰ������Ҫ���ڴ��С*/
         need_size = map_index * OSE_MEM_POOL_PAGE_SIZE;
 
         while(current_cl_index < pool_ptr->cl_nums)
@@ -412,7 +412,7 @@ void ose_init_block_map(Ose_pool_id pool_id)
 }
 /*****************************************************************************
 * Function  : ose_init_pool_lock
-* Purpose   : 一个内存池一个互斥量，该函数负责初始化互斥量
+* Purpose   : һ���ڴ��һ�����������ú��������ʼ��������
 * Relation  :
 *
 * Input Parameters:
@@ -429,19 +429,19 @@ void ose_init_pool_lock(Ose_pool_id pool_id)
 {
     if(ose_pool[pool_id].bPoolLock == OSE_FALSE)
     {
-        /*该内存池不需要互�?*/
+        /*���ڴ�ز���Ҫ����*/
         return;
     }
 
-/*该内存池需要互�?*/
+/*���ڴ����Ҫ����*/
 #ifdef LINUX_SWITCH
     ose_pool[pool_id].uiPoolLock = ose_create_mutex("POOLLOCK", OSE_TRUE);
 #endif
 }
-/*外部接口*/
+/*�ⲿ�ӿ�*/
 /*****************************************************************************
 * Function  : ose_buf_get_mem
-* Purpose   : 申请内存block
+* Purpose   : �����ڴ�block
 * Relation  :
 *
 * Input Parameters:
@@ -452,8 +452,8 @@ void ose_init_pool_lock(Ose_pool_id pool_id)
 *
 *
 * Return:
-*   非NULL 成功
-*   其他不返�?
+*   ��NULL �ɹ�
+*   ����������
 * Note:
 *******************************************************************************/
 void* ose_buf_get_mem(Ose_pool_id pool_id, UINT32 size, Ose_instance_id inst_id, UINT32 file, UINT32 line)
@@ -475,7 +475,7 @@ void* ose_buf_get_mem(Ose_pool_id pool_id, UINT32 size, Ose_instance_id inst_id,
 }
 /*****************************************************************************
 * Function  : ose_buf_get_mem_allow_nullptr
-* Purpose   : 申请内存block
+* Purpose   : �����ڴ�block
 * Relation  :
 *
 * Input Parameters:
@@ -486,8 +486,8 @@ void* ose_buf_get_mem(Ose_pool_id pool_id, UINT32 size, Ose_instance_id inst_id,
 *
 *
 * Return:
-*   非NULL 成功
-*   NULL失败
+*   ��NULL �ɹ�
+*   NULLʧ��
 * Note:
 *******************************************************************************/
 void* ose_buf_get_mem_allow_nullptr(Ose_pool_id pool_id, UINT32 size, Ose_instance_id inst_id, UINT32 file, UINT32 line)
@@ -506,12 +506,12 @@ void* ose_buf_get_mem_allow_nullptr(Ose_pool_id pool_id, UINT32 size, Ose_instan
         return NULL;
     }
 
-    /*取得内存池内存簇信息*/
+    /*ȡ���ڴ���ڴ����Ϣ*/
     pool_ptr = &ose_pool[pool_id].stPoolInfo;
     cl_info  = pool_ptr->cl_info;
     cl_nums  = pool_ptr->cl_nums;
 
-    /*超过内存池的最大block */
+    /*�����ڴ�ص����block */
     if(size > pool_ptr->max_size)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_buf_get_mem_allow_nullptr]: get max size !!!");
@@ -519,9 +519,9 @@ void* ose_buf_get_mem_allow_nullptr(Ose_pool_id pool_id, UINT32 size, Ose_instan
     }
 
     blk_ptr = (Ose_block*)NULL;
-    /*计算查找的初始索�?*/
+    /*������ҵĳ�ʼ����*/
     cl_index = pool_ptr->size_map[size / OSE_MEM_POOL_PAGE_SIZE];
-    /*进入互斥�?*/
+    /*���뻥����*/
     ose_pool_lock_get(pool_id);
 
     for(; cl_index < cl_nums; cl_index++)
@@ -532,15 +532,15 @@ void* ose_buf_get_mem_allow_nullptr(Ose_pool_id pool_id, UINT32 size, Ose_instan
         {
             if(cl_info[cl_index].free_num > 0)
             {
-                /*找到合适的内存*/
+                /*�ҵ����ʵ��ڴ�*/
                 blk_ptr = cl_info[cl_index].free_head_blk_ptr;
                 cl_info[cl_index].free_num--;
 
-                /*先将该block从簇控制链表里删�?*/
+                /*�Ƚ���block�Ӵؿ���������ɾ��*/
                 cl_info[cl_index].free_head_blk_ptr = cl_info[cl_index].free_head_blk_ptr->next_blk_ptr;
                 if(cl_info[cl_index].free_head_blk_ptr == NULL)
                 {
-                    /*只有当前这个block*/
+                    /*ֻ�е�ǰ���block*/
                     cl_info[cl_index].free_tail_blk_ptr = NULL;
                 }
                 break;
@@ -552,20 +552,20 @@ void* ose_buf_get_mem_allow_nullptr(Ose_pool_id pool_id, UINT32 size, Ose_instan
 
     if(blk_ptr != (Ose_block*)NULL)
     {
-        /*申请成功*/
+        /*����ɹ�*/
         blk_ptr->used_cnt = 1;
 
         return (void*)blk_ptr->usr_data;
     }
     else
     {
-        /*本内存池内存耗尽*/
+        /*���ڴ���ڴ�ľ�*/
         return NULL;
     }
 }
 /*****************************************************************************
 * Function  : ose_buf_free_mem
-* Purpose   : 释放内存block
+* Purpose   : �ͷ��ڴ�block
 * Relation  :
 *
 * Input Parameters:
@@ -585,7 +585,7 @@ Ose_status ose_buf_free_mem(UINT8* ptr, UINT32 file, UINT32 line)
     Bool         is_unused_block;
     ose_pool_lock_define
 
-    /*是否为空*/
+    /*�Ƿ�Ϊ��*/
     if(ptr == NULL)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_buf_free_mem]: free null !!!");
@@ -599,7 +599,7 @@ Ose_status ose_buf_free_mem(UINT8* ptr, UINT32 file, UINT32 line)
     cl_info_ptr = &ose_pool[blk_ptr->pool_id].stPoolInfo.cl_info[blk_ptr->cl_id];
 
     ose_pool_lock_get(blk_ptr->pool_id);
-    /*是否重复释放*/
+    /*�Ƿ��ظ��ͷ�*/
     if(blk_ptr->used_cnt == 0)
     {
         is_unused_block = OSE_TRUE;
@@ -610,14 +610,14 @@ Ose_status ose_buf_free_mem(UINT8* ptr, UINT32 file, UINT32 line)
 
         blk_ptr->used_cnt--;
 
-        /*保留释放者信�?*/
+        /*�����ͷ�����Ϣ*/
         if(blk_ptr->used_cnt == 0)
         {
             cl_info_ptr->free_num++;
-            /*将结点放在空闲链表头�?*/
+            /*�������ڿ�������ͷ��*/
             if(cl_info_ptr->free_head_blk_ptr == NULL)
             {
-                /*链表无结�?*/
+                /*�����޽��*/
                 cl_info_ptr->free_tail_blk_ptr = blk_ptr;
                 cl_info_ptr->free_head_blk_ptr = blk_ptr;
                 blk_ptr->next_blk_ptr          = NULL;
@@ -632,7 +632,7 @@ Ose_status ose_buf_free_mem(UINT8* ptr, UINT32 file, UINT32 line)
 
     ose_pool_lock_put(blk_ptr->pool_id);
 
-    /*重复释放*/
+    /*�ظ��ͷ�*/
     if(is_unused_block == OSE_TRUE)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_buf_free_mem]: free unused !!!");
@@ -643,7 +643,7 @@ Ose_status ose_buf_free_mem(UINT8* ptr, UINT32 file, UINT32 line)
 }
 /*****************************************************************************
 * Function  : ose_buf_link_mem
-* Purpose   : 复用内存block
+* Purpose   : �����ڴ�block
 * Relation  :
 *
 * Input Parameters:
@@ -661,7 +661,7 @@ Ose_status ose_buf_link_mem(UINT8* ptr)
     Ose_block* blk_ptr;
     ose_pool_lock_define
 
-    /*是否为空*/
+    /*�Ƿ�Ϊ��*/
     if(ptr == NULL)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_buf_link_mem]: link null !!!");
@@ -674,7 +674,7 @@ Ose_status ose_buf_link_mem(UINT8* ptr)
 
     ose_pool_lock_get(blk_ptr->pool_id);
 
-    /*没有分配的内�?*/
+    /*û�з�����ڴ�*/
     if(blk_ptr->used_cnt == 0)
     {
         ose_pool_lock_put(blk_ptr->pool_id);
@@ -684,7 +684,7 @@ Ose_status ose_buf_link_mem(UINT8* ptr)
 
     blk_ptr->used_cnt++;
 
-    /*检查cut是否超限*/
+    /*���cut�Ƿ���*/
     if(OSE_MAX_LINK_BUFF_TIMES < blk_ptr->used_cnt)
     {
         ose_pool_lock_put(blk_ptr->pool_id);
@@ -698,7 +698,7 @@ Ose_status ose_buf_link_mem(UINT8* ptr)
 }
 /*****************************************************************************
 * Function  : ose_buf_delete_all
-* Purpose   : 删除内存管理所有资�?
+* Purpose   : ɾ���ڴ����������Դ
 * Relation  :
 *
 * Input Parameters:
@@ -714,15 +714,15 @@ Ose_status ose_buf_delete_all()
     {
         for(cl_index = 0; cl_index < ose_pool[id].stPoolInfo.cl_nums; cl_index++)
         {
-            /*释放block以及控制头空�?*/
+            /*�ͷ�block�Լ�����ͷ�ռ�*/
             free((UINT8*)(ose_pool[id].stPoolInfo.cl_info[cl_index].blk_cont_head_ptr));
             (*ose_pool[id].pfFreeBlockMem)((UINT8*)(ose_pool[id].stPoolInfo.cl_info[cl_index].blk_user_head_ptr));
         }
-        /*释放map空间*/
+        /*�ͷ�map�ռ�*/
         free((UINT8*)(ose_pool[id].stPoolInfo.size_map));
-        /*释放内存池的簇控制字�?*/
+        /*�ͷ��ڴ�صĴؿ����ֶ�*/
         free((UINT8*)(ose_pool[id].stPoolInfo.cl_info));
-        /*初始化内存池字段*/
+        /*��ʼ���ڴ���ֶ�*/
         ose_pool[id].stPoolInfo.cl_nums  = 0;
         ose_pool[id].stPoolInfo.max_size = 0;
         ose_pool[id].stPoolInfo.size_map = (UINT8*)NULL;

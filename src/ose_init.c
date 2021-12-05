@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_init.c                                                  */
-/* Description   : ç³»ç»Ÿåˆå§‹åŒ?                                                  */
+/* Description   : ÏµÍ³³õÊ¼»¯                                                  */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -13,20 +13,20 @@
 
 extern Ose_task_id       g_ose_start_sequence[];
 extern Ose_semaphore     ose_semaphore[OSE_MAX_SEMAPHORES];
-/*ä»»åŠ¡æè¿°è¡¨ï¼Œåœ¨OSEåˆå§‹åŒ–æ—¶ï¼Œæ ¹æ®ä»»åŠ¡é…ç½®è¡¨åˆå§‹åŒ?*/
+/*ÈÎÎñÃèÊö±í£¬ÔÚOSE³õÊ¼»¯Ê±£¬¸ù¾ÝÈÎÎñÅäÖÃ±í³õÊ¼»¯*/
 Ose_task_desc_tbl g_ose_task_desc_tbl[OSE_MAX_TASKS] = {
     { 0, 0, 0, 0, OSE_TRUE, NULL, { NULL, NULL, NULL, NULL }, NULL, 0, 0 }
 };
-/*ç”¨äºŽåˆå§‹åŒ–æ—¶ï¼Œæ ‡å‡†ä»»åŠ¡å’Œåˆå§‹åŒ–ä»»åŠ¡çš„é€šä¿¡*/
+/*ÓÃÓÚ³õÊ¼»¯Ê±£¬±ê×¼ÈÎÎñºÍ³õÊ¼»¯ÈÎÎñµÄÍ¨ÐÅ*/
 Ose_sema_id         g_ose_init_sema  = OSE_UNAVAILABLE_ID;
 Ose_mutex_id        g_ose_init_mutex = OSE_UNAVAILABLE_ID;
-/*0ä¸ºæœªå®Œæˆåˆå§‹åŒ–ï¼Œ1ä¸ºå®Œæˆ?*/
+/*0ÎªÎ´Íê³É³õÊ¼»¯£¬1ÎªÍê³É*/
 UINT8               g_ose_task_init_flag[OSE_MAX_TASKS];
 Ose_sema_id         ose_exit_sema = OSE_UNAVAILABLE_ID;
 
 /*****************************************************************************
 * Function  : ose_kernel_init
-* Purpose   : OSEåˆå§‹åŒ?
+* Purpose   : OSE³õÊ¼»¯
 * Relation  :
 *
 * Input Parameters:
@@ -35,14 +35,14 @@ Ose_sema_id         ose_exit_sema = OSE_UNAVAILABLE_ID;
 *   -----------         --------------          ------      -----------
 *
 * Return:
-*   OSE_SUCCESS åˆå§‹åŒ–æˆåŠ?
-*   OSE_FAILURE åˆå§‹åŒ–å¤±è´?
+*   OSE_SUCCESS ³õÊ¼»¯³É¹¦
+*   OSE_FAILURE ³õÊ¼»¯Ê§°Ü
 * Note:
 *******************************************************************************/
 Ose_status ose_kernel_init(void)
 {
     Ose_status ret;
-    /*OSEç³»ç»Ÿèµ„æºåˆå§‹åŒ?*/
+    /*OSEÏµÍ³×ÊÔ´³õÊ¼»¯*/
     ret = ose_init_system_res();
     if(ret != OSE_SUCCESS)
     {
@@ -50,7 +50,7 @@ Ose_status ose_kernel_init(void)
         return OSE_FAILURE;
     }
 
-    /*OSEåˆå§‹åŒ–ä¸Šå±‚ä»»åŠ¡çš„æ‰§è¡ŒçŽ¯å¢ƒ*/
+    /*OSE³õÊ¼»¯ÉÏ²ãÈÎÎñµÄÖ´ÐÐ»·¾³*/
     ret = ose_init_user_res();
     if(ret != OSE_SUCCESS)
     {
@@ -61,7 +61,7 @@ Ose_status ose_kernel_init(void)
 }
 /*****************************************************************************
 * Function  : ose_kernel_exit
-* Purpose   : OSEé€€å‡?
+* Purpose   : OSEÍË³ö
 * Relation  :
 *
 * Input Parameters:
@@ -70,45 +70,45 @@ Ose_status ose_kernel_init(void)
 *   -----------         --------------          ------      -----------
 *
 * Return:
-*   OSE_SUCCESS OSEé€€å‡ºæˆåŠ?
-*   OSE_FAILURE OSEé€€å‡ºå¤±è´?
+*   OSE_SUCCESS OSEÍË³ö³É¹¦
+*   OSE_FAILURE OSEÍË³öÊ§°Ü
 * Note:
 *******************************************************************************/
 Ose_status ose_kernel_exit()
 {
-    /*æ¸…é™¤æœ¬æ¨¡å—ä½¿ç”¨çš„äº’æ–¥é‡å’Œä¿¡å·é‡èµ„æº?*/
+    /*Çå³ý±¾Ä£¿éÊ¹ÓÃµÄ»¥³âÁ¿ºÍÐÅºÅÁ¿×ÊÔ´*/
     g_ose_init_sema  = OSE_UNAVAILABLE_ID;
     g_ose_init_mutex = OSE_UNAVAILABLE_ID;
 
-    /*åˆ é™¤æ‰€æœ‰ä»»åŠ?*/
+    /*É¾³ýËùÓÐÈÎÎñ*/
     if(ose_task_delete_all() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
 
-    /*åˆ é™¤æ‰€æœ‰ä»»åŠ¡é—´é‚®ç®±*/
+    /*É¾³ýËùÓÐÈÎÎñ¼äÓÊÏä*/
     if(ose_mb_delete_all() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
 
-    /*åˆ é™¤æ‰€æœ‰å·²ç”¨ä¿¡å·é‡*/
+    /*É¾³ýËùÓÐÒÑÓÃÐÅºÅÁ¿*/
     if(ose_sema_delete_all() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
 
-    /*åˆ é™¤æ‰€æœ‰å·²ä½¿ç”¨äº’æ–¥é‡?*/
+    /*É¾³ýËùÓÐÒÑÊ¹ÓÃ»¥³âÁ¿*/
     if(ose_mutex_delete_all() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
-    /*åˆ é™¤å†…å­˜æ± ï¼Œé‡Šæ”¾å†…å­˜ç»™OS*/
+    /*É¾³ýÄÚ´æ³Ø£¬ÊÍ·ÅÄÚ´æ¸øOS*/
     if(ose_buf_delete_all() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
-    /*åˆ é™¤å·²ä½¿ç”¨çš„å®šæ—¶å™?*/
+    /*É¾³ýÒÑÊ¹ÓÃµÄ¶¨Ê±Æ÷*/
     if(ose_timer_delete_all() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
@@ -117,7 +117,7 @@ Ose_status ose_kernel_exit()
 }
 /*****************************************************************************
 * Function  : ose_init_system_res
-* Purpose   : åˆå§‹åŒ–OSEçš„ç³»ç»Ÿèµ„æº?
+* Purpose   : ³õÊ¼»¯OSEµÄÏµÍ³×ÊÔ´
 * Relation  :
 *
 * Input Parameters:
@@ -125,37 +125,37 @@ Ose_status ose_kernel_exit()
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
 *
-* Return: OSEçš„çŠ¶æ€?
+* Return: OSEµÄ×´Ì¬
 * Note:
 *******************************************************************************/
 Ose_status ose_init_system_res()
 {
-    /*åˆå§‹åŒ–ä»»åŠ¡ç®¡ç?*/
+    /*³õÊ¼»¯ÈÎÎñ¹ÜÀí*/
     if(ose_init_task() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
-    /*åˆå§‹åŒ–äº’æ–¥é‡ç®¡ç†æ¨¡å—*/
+    /*³õÊ¼»¯»¥³âÁ¿¹ÜÀíÄ£¿é*/
     if(ose_init_mutex() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
-    /*åˆå§‹åŒ–OSEçš„å†…å­˜ç®¡ç†æ¨¡å?*/
+    /*³õÊ¼»¯OSEµÄÄÚ´æ¹ÜÀíÄ£¿é*/
     if(ose_init_pools() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
-    /*åˆå§‹åŒ–ä¿¡å·é‡ç®¡ç†æ¨¡å—*/
+    /*³õÊ¼»¯ÐÅºÅÁ¿¹ÜÀíÄ£¿é*/
     if(ose_init_sema() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
-    /*åˆå§‹åŒ–ä»»åŠ¡é—´é‚®ç®±*/
+    /*³õÊ¼»¯ÈÎÎñ¼äÓÊÏä*/
     if(ose_init_mb() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
     }
-    /*åˆå§‹åŒ–å®šæ—¶å™¨*/
+    /*³õÊ¼»¯¶¨Ê±Æ÷*/
     if(ose_init_timer() != OSE_SUCCESS)
     {
         return OSE_FAILURE;
@@ -164,7 +164,7 @@ Ose_status ose_init_system_res()
 }
 /*****************************************************************************
 * Function  : ose_init_user_res
-* Purpose   : OSEåˆå§‹åŒ–ä¸Šå±‚ä»»åŠ¡çš„æ‰§è¡ŒçŽ¯å¢ƒ
+* Purpose   : OSE³õÊ¼»¯ÉÏ²ãÈÎÎñµÄÖ´ÐÐ»·¾³
 * Relation  :
 *
 * Input Parameters:
@@ -172,7 +172,7 @@ Ose_status ose_init_system_res()
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
 *
-* Return: OSEçš„çŠ¶æ€?
+* Return: OSEµÄ×´Ì¬
 * Note:
 *******************************************************************************/
 Ose_status ose_init_user_res()
@@ -183,7 +183,7 @@ Ose_status ose_init_user_res()
     Ose_status      ret_status;
     Bool            wait_flag = OSE_FALSE;
 
-    /*åˆ›å»ºä¸€ä¸ªåˆå§‹countä¸?0çš„ä¿¡å·é‡*/
+    /*´´½¨Ò»¸ö³õÊ¼countÎª0µÄÐÅºÅÁ¿*/
     g_ose_init_sema = ose_create_sema((Ose_sema_name) "OseInitSema", 1, OSE_FALSE);
     if(g_ose_init_sema == OSE_UNAVAILABLE_ID)
     {
@@ -191,7 +191,7 @@ Ose_status ose_init_user_res()
         return OSE_FAILURE;
     }
 
-    /*åˆ›å»ºä¸€ä¸ªäº’æ–¥é‡ï¼Œä¿æŠ¤g_ose_task_init_flag*/
+    /*´´½¨Ò»¸ö»¥³âÁ¿£¬±£»¤g_ose_task_init_flag*/
     g_ose_init_mutex = ose_create_mutex((Ose_mutex_name) "OseInitMutex", OSE_TRUE);
     if(g_ose_init_mutex == OSE_UNAVAILABLE_ID)
     {
@@ -199,10 +199,10 @@ Ose_status ose_init_user_res()
         return OSE_FAILURE;
     }
     ose_create_task_signal();
-    /*æ‰€æœ‰ä»»åŠ¡åˆå§‹åŒ–æœªå·²å®Œæˆï¼Œéœ€è¦åˆ›å»ºçš„æ ‡å‡†ä»»åŠ¡é»˜è®¤æœªå®Œæˆ?*/
+    /*ËùÓÐÈÎÎñ³õÊ¼»¯Î´ÒÑÍê³É£¬ÐèÒª´´½¨µÄ±ê×¼ÈÎÎñÄ¬ÈÏÎ´Íê³É*/
     memset((void*)g_ose_task_init_flag, 1, sizeof(g_ose_task_init_flag));
 
-    /*åˆ›å»ºæ ‡å‡†ä»»åŠ¡çš„ä»»åŠ¡é—´é‚®ç®±*/
+    /*´´½¨±ê×¼ÈÎÎñµÄÈÎÎñ¼äÓÊÏä*/
     for(loop = 0; loop <= OSE_MAX_TASKS; loop++)
     {
         if(g_ose_start_sequence[loop] >= OSE_MAX_TASKS)
@@ -210,26 +210,26 @@ Ose_status ose_init_user_res()
             break;
         }
 
-        /*å¾—åˆ°éœ€è¦å¯åŠ¨çš„ä»»åŠ¡id*/
+        /*µÃµ½ÐèÒªÆô¶¯µÄÈÎÎñid*/
         task_id                       = g_ose_start_sequence[loop];
         g_ose_task_init_flag[task_id] = 0;
         wait_flag                     = OSE_TRUE;
 
-        /*åˆ›å»ºä»»åŠ¡é—´é‚®ç®?*/
+        /*´´½¨ÈÎÎñ¼äÓÊÏä*/
         mb_size = g_ose_task_desc_tbl[task_id].task_mb_size;
         if(mb_size == (UINT32)-1)
         {
-            /*OSEè®¡ç®—é‚®ç®±å¤§å°*/
+            /*OSE¼ÆËãÓÊÏä´óÐ¡*/
             ret_status = ose_create_mb(task_id, ((1 + g_ose_task_desc_tbl[task_id].task_pri / 10) * 20));
         }
         else if(mb_size == 0)
         {
-            /*ä¸åˆ›å»ºä»»åŠ¡é—´é‚®ç®±*/
+            /*²»´´½¨ÈÎÎñ¼äÓÊÏä*/
             ret_status = OSE_SUCCESS;
         }
         else
         {
-            /*ç”±å…¥å‚å€¼åˆ›å»ºé‚®ç®±å¤§å°?*/
+            /*ÓÉÈë²ÎÖµ´´½¨ÓÊÏä´óÐ¡*/
             ret_status = ose_create_mb(task_id, mb_size);
         }
 
@@ -240,7 +240,7 @@ Ose_status ose_init_user_res()
         }
     }
 
-    /*åˆ›å»ºæ ‡å‡†ä»»åŠ¡å¹¶é€ä¸€ç­‰å¾…åˆå§‹åŒ–å®Œæ¯?*/
+    /*´´½¨±ê×¼ÈÎÎñ²¢ÖðÒ»µÈ´ý³õÊ¼»¯Íê±Ï*/
     for(loop = 0; loop <= OSE_MAX_TASKS; loop++)
     {
         if(g_ose_start_sequence[loop] >= OSE_MAX_TASKS)
@@ -248,11 +248,11 @@ Ose_status ose_init_user_res()
             break;
         }
 
-        /*å¾—åˆ°éœ€è¦å¯åŠ¨çš„ä»»åŠ¡id*/
+        /*µÃµ½ÐèÒªÆô¶¯µÄÈÎÎñid*/
         task_id = g_ose_start_sequence[loop];
 
-        //è½¬æ¢æŽ¥æ”¶é‚®ç®±
-        /*åˆ›å»ºä»»åŠ¡ä½†ä¸åˆ›å»ºä»»åŠ¡é—´é‚®ç®?*/
+        //×ª»»½ÓÊÕÓÊÏä
+        /*´´½¨ÈÎÎñµ«²»´´½¨ÈÎÎñ¼äÓÊÏä*/
         if(ose_create_task(task_id,
                            (Ose_task_entry)ose_task_entry,
                            g_ose_task_desc_tbl[task_id].task_pri,
@@ -267,12 +267,12 @@ Ose_status ose_init_user_res()
     }
     if(wait_flag == OSE_TRUE)
     {
-        /*ç­‰å¾…ä¸Šé¢åˆ›å»ºçš„ä»»åŠ¡éƒ½åˆå§‹åŒ–å®Œæˆäº†å†ç»§ç»­å‘åŽæ‰§è¡?*/
+        /*µÈ´ýÉÏÃæ´´½¨µÄÈÎÎñ¶¼³õÊ¼»¯Íê³ÉÁËÔÙ¼ÌÐøÏòºóÖ´ÐÐ*/
         ose_obtain_sema(g_ose_init_sema, OSE_WAIT_FOREVER);
     }
-    /*åˆ é™¤è¯¥äº’æ–¥é‡å’Œä¿¡å·é‡èµ„æº*/
+    /*É¾³ý¸Ã»¥³âÁ¿ºÍÐÅºÅÁ¿×ÊÔ´*/
     ose_delete_sema(g_ose_init_sema);
     ose_delete_mutex(g_ose_init_mutex);
-    /*æ‰§è¡Œå®Œæ¯•ï¼Œè¿”å›žæˆåŠ?*/
+    /*Ö´ÐÐÍê±Ï£¬·µ»Ø³É¹¦*/
     return OSE_SUCCESS;
 }

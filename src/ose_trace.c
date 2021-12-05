@@ -1,4 +1,5 @@
 /*******************************************************************************/
+/*******************************************************************************/
 /* Filename      : ose_trace.c                                                 */
 /* Description   : 日志管理                                                    */
 /*                                                                             */
@@ -16,7 +17,7 @@ UINT32   gTraceLevel = OSE_TRACE_ALL; // 日志等级
 
 /*****************************************************************************
 * Function  : ose_trace
-* Purpose   : 写日�?
+* Purpose   : 写日志
 * Relation  :
 *
 * Input Parameters:
@@ -49,14 +50,14 @@ void ose_trace(UINT32 log_level, char const* arg_ptr, ...)
 
     // 写入日志时间
     ose_get_trace_time(time_buff);
-    // 在原内容中添加日志等级标�?
+    // 在原内容中添加日志等级标识
     snprintf(trace_buff, sizeof(trace_buff) - 1, "[%s][%s]%s", time_buff,ose_get_trace_level(log_level),&str_buff[0]);
     printf("%s\n",trace_buff); 
     return;
 }
 /*****************************************************************************
 * Function  : ose_get_trace_level
-* Purpose   : 获取对应的日志等�?
+* Purpose   : 获取对应的日志等级
 * Relation  :
 *
 * Input Parameters:
@@ -67,7 +68,7 @@ void ose_trace(UINT32 log_level, char const* arg_ptr, ...)
 *
 *
 * Return:
-*   日志等级信息字符�?
+*   日志等级信息字符串
 *******************************************************************************/
 char* ose_get_trace_level(UINT32 log_level)
 {
@@ -100,14 +101,14 @@ char* ose_get_trace_level(UINT32 log_level)
 }
 /*****************************************************************************
 * Function  : ose_get_trace_time
-* Purpose   : 获取时间�?
+* Purpose   : 获取时间串
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*       time_str           UINT8*                 In         时间�?
+*       time_str           UINT8*                 In         时间串
 *
 *
 * Return:
@@ -135,7 +136,7 @@ void ose_get_trace_time(char* time_str)
 *
 *
 * Return:
-*   日志等级信息字符�?
+*   日志等级信息字符串
 *******************************************************************************/
 void ose_set_trace_level(UINT32 level)
 {

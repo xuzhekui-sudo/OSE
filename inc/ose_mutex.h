@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_mutex.h                                                 */
-/* Description   : ‰∫íÊñ•Èá?                                                       */
+/* Description   : ª•≥‚¡ø                                                       */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -12,7 +12,7 @@
 
 #define OSE_MUTEX_NAME "OseMutex"
 
-/*‰∫íÊñ•ÈáèÊéßÂà∂Â≠óÊÆ?*/
+/*ª•≥‚¡øøÿ÷∆◊÷∂Œ*/
 typedef struct Ose_mutex_st
 {
 #ifdef LINUX_SWITCH

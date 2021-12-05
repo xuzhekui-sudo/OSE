@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_con.h                                                   */
-/* Description   : å…±é€šå®å®šä¹‰                                                  */
+/* Description   : ¹²Í¨ºê¶¨Òå                                                  */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -11,7 +11,7 @@
 #define OSE_CON_H
 
 /********************************************/
-/* æ–‡ä»¶ç¼–å·                                 */
+/* ÎÄ¼þ±àºÅ                                 */
 /********************************************/
 #define OSE_FILE_ID_BASE                    50000
 #define ADHOC_FILE_ID_BASE                  60000
@@ -24,13 +24,13 @@
 #define ADHOC_MULTICAST_ROUTE_FILE_ID_BASE  ADHOC_FILE_ID_BASE + 600
 #define ADHOC_AT_FILE_ID_BASE               ADHOC_FILE_ID_BASE + 700
 
-#define OSE_MAX_TASKS                       128                           /* ä¸Šå±‚çš„æœ€å¤§ä»»åŠ¡ä¸ªæ•? */
-#define OSE_MAX_MAILBOXS                    OSE_MAX_TASKS                 /* æœ€å¤§é‚®ç®±ä¸ªæ•? */
-#define OSE_MAX_SEMAPHORES                  100                           /* OSEå¯åˆ†é…çš„æœ€å¤§ä¿¡å·é‡ä¸ªæ•° */
-#define OSE_MAX_MUTEXES                     200                           /* OSEå¯åˆ†é…çš„æœ€å¤§äº’æ–¥é‡ä¸ªæ•° */
-#define OSE_UNAVAILABLE_ID                  0xFFFFFFFF                    /* æ— æ•ˆå€? */
-#define OSE_MAX_TIMERS                      5000                          /* å®šæ—¶å™¨ä¸ªæ•? */
-#define SEM_VALUE_MAX                       32767                         /* ä¿¡å·é‡æœ€å¤§countå€? */
+#define OSE_MAX_TASKS                       128                           /* ÉÏ²ãµÄ×î´óÈÎÎñ¸öÊý */
+#define OSE_MAX_MAILBOXS                    OSE_MAX_TASKS                 /* ×î´óÓÊÏä¸öÊý */
+#define OSE_MAX_SEMAPHORES                  100                           /* OSE¿É·ÖÅäµÄ×î´óÐÅºÅÁ¿¸öÊý */
+#define OSE_MAX_MUTEXES                     200                           /* OSE¿É·ÖÅäµÄ×î´ó»¥³âÁ¿¸öÊý */
+#define OSE_UNAVAILABLE_ID                  0xFFFFFFFF                    /* ÎÞÐ§Öµ */
+#define OSE_MAX_TIMERS                      5000                          /* ¶¨Ê±Æ÷¸öÊý */
+#define SEM_VALUE_MAX                       32767                         /* ÐÅºÅÁ¿×î´ócountÖµ */
 
 /********************************************/
 /* TASK                                     */

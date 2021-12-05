@@ -19,13 +19,13 @@ extern Ose_sema_id       g_ose_init_sema;
 extern UINT8             g_ose_task_init_flag[OSE_MAX_TASKS];
 extern Ose_task_id       g_ose_start_sequence[];
 extern Ose_mutex         ose_mutex[OSE_MAX_MUTEXES];
-/*所有任务的控制�?*/
+/*所有任务的控制块*/
 Ose_task_spec_tbl        g_ose_task_spec_tbl[OSE_MAX_TASKS];
 Ose_thread_cond          g_ose_create_cond;
 Ose_mutex_id             g_ose_create_task_mutex = OSE_UNAVAILABLE_ID;
 /*****************************************************************************
 * Function  : ose_init_task
-* Purpose   : 任务管理初始�?
+* Purpose   : 任务管理初始化
 * Relation  :
 *
 * Input Parameters:
@@ -35,14 +35,14 @@ Ose_mutex_id             g_ose_create_task_mutex = OSE_UNAVAILABLE_ID;
 *       N/A                 N/A
 *
 * Return:
-*   OSE_SUCCESS 初始化成�?
-*   OSE_FAILURE 初始化失�?
+*   OSE_SUCCESS 初始化成功
+*   OSE_FAILURE 初始化失败
 * Note:
 *******************************************************************************/
 Ose_status ose_init_task(void)
 {
     UINT8 index;
-    /*初始化任务控制字�?*/
+    /*初始化任务控制字段*/
     for(index = 0; index < OSE_MAX_TASKS; index++)
     {
         g_ose_task_spec_tbl[index].is_used = OSE_FALSE;
@@ -64,7 +64,7 @@ Ose_status ose_init_task(void)
 }
 /*****************************************************************************
 * Function  : ose_is_task_created
-* Purpose   : 查询某任务是否创�?
+* Purpose   : 查询某任务是否创建
 * Relation  :
 *
 * Input Parameters:
@@ -75,7 +75,7 @@ Ose_status ose_init_task(void)
 *
 * Return:
 *   OSE_TRUE 任务创建
-*   OSE_FALSE 任务没创�?
+*   OSE_FALSE 任务没创建
 * Note:
 *******************************************************************************/
 Bool ose_is_task_created(Ose_task_id task_id)
@@ -99,15 +99,15 @@ Bool ose_is_task_created(Ose_task_id task_id)
 *   -----------         --------------          ------      -----------
 *       tid             UINT8                   In          任务编号
 *       entry           Ose_task_entry          In          任务入口函数
-*       param           UINT32                  In          入口函数的入�?
-*       pri             UINT8                   In          任务优先�?
-*       stack_size      UINT16                  In          任务栈大�?
+*       param           UINT32                  In          入口函数的入参
+*       pri             UINT8                   In          任务优先级
+*       stack_size      UINT16                  In          任务栈大小
 *       mb_size         UINT32                  In          任务间邮箱的大小
 *
 * Return:
 *   OSE_SUCCESS 任务创建
-*   OSE_FAILURE 任务没创�?
-* Note:     如果本任务的任务间邮箱没创建，创建任务间邮箱�?
+*   OSE_FAILURE 任务没创建
+* Note:     如果本任务的任务间邮箱没创建，创建任务间邮箱。
 *******************************************************************************/
 Ose_status ose_create_task(Ose_task_id     tid,
                            Ose_task_entry  entry,
@@ -126,22 +126,22 @@ Ose_status ose_create_task(Ose_task_id     tid,
         return OSE_FAILURE;
     }
 
-    /*检查入口函�?*/
+    /*检查入口函数*/
     if(entry == NULL)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_create_task]: entry error !!!");
         return OSE_FAILURE;
     }
 
-    /*检查任务是否已经创�?*/
+    /*检查任务是否已经创建*/
     if(g_ose_task_spec_tbl[tid].is_used == OSE_TRUE)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_create_task]: is_used error !!!");
         return OSE_FAILURE;
     }
 
-    /*同一个tid不考虑两个任务调用的情�?*/
-    /*该任务控制字段置为创�?*/
+    /*同一个tid不考虑两个任务调用的情况*/
+    /*该任务控制字段置为创建*/
     g_ose_task_spec_tbl[tid].is_used = OSE_TRUE;
 
     /*判断当前任务是否创建了任务间邮箱*/
@@ -159,18 +159,18 @@ Ose_status ose_create_task(Ose_task_id     tid,
         }
         else
         {
-            /*由入参值创建邮箱大�?*/
+            /*由入参值创建邮箱大小*/
             ret_status = ose_create_mb(tid, mb_size);
         }
 
-        /*对邮箱创建结果进行检�?*/
+        /*对邮箱创建结果进行检查*/
         if(ret_status != OSE_SUCCESS)
         {
             ose_trace(OSE_TRACE_ERROR,"[ose_create_task]: ose_mailbox error !!!");
             return OSE_FAILURE;
         }
 
-        /*保存任务间邮箱到任务描述�?*/
+        /*保存任务间邮箱到任务描述表*/
         g_ose_task_desc_tbl[tid].task_ext_queue = tid;
     }
 
@@ -183,7 +183,7 @@ Ose_status ose_create_task(Ose_task_id     tid,
     memset(&(g_ose_task_spec_tbl[tid].task_attr),0,sizeof(pthread_attr_t));
     pthread_attr_init(&(g_ose_task_spec_tbl[tid].task_attr));
     ret_status = pthread_attr_setstacksize(&(g_ose_task_spec_tbl[tid].task_attr), stack_size);
-    /*配置线程栈大�?*/
+    /*配置线程栈大小*/
     if(ret_status == -1)
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_create_task]: set task stack size !!!");
@@ -216,7 +216,7 @@ Ose_status ose_create_task(Ose_task_id     tid,
 *
 * Return:
 *   OSE_SUCCESS 任务删除成功
-*   OSE_FAILURE 任务没删除失�?
+*   OSE_FAILURE 任务没删除失败
 * Note:
 *******************************************************************************/
 Ose_status ose_task_join(void)
@@ -238,7 +238,7 @@ Ose_status ose_task_join(void)
 }
 /*****************************************************************************
 * Function  : ose_create_task_signal
-* Purpose   : 创建信号给任�?
+* Purpose   : 创建信号给任务
 * Relation  :
 *
 * Input Parameters:
@@ -247,8 +247,8 @@ Ose_status ose_task_join(void)
 *   -----------         --------------          ------      -----------
 *
 * Return:
-*   OSE_SUCCESS 任务发信号成�?
-*   OSE_FAILURE 任务发信号失�?
+*   OSE_SUCCESS 任务发信号成功
+*   OSE_FAILURE 任务发信号失败
 * Note:
 *******************************************************************************/
 Ose_status ose_create_task_signal()
@@ -279,8 +279,8 @@ Ose_status ose_create_task_signal()
 *   -----------         --------------          ------      -----------
 *
 * Return:
-*   OSE_SUCCESS 任务发信号成�?
-*   OSE_FAILURE 任务发信号失�?
+*   OSE_SUCCESS 任务发信号成功
+*   OSE_FAILURE 任务发信号失败
 * Note:
 *******************************************************************************/
 Ose_status ose_post_task_signal()
@@ -298,8 +298,8 @@ Ose_status ose_post_task_signal()
 *   -----------         --------------          ------      -----------
 *
 * Return:
-*   OSE_SUCCESS 任务发信号成�?
-*   OSE_FAILURE 任务发信号失�?
+*   OSE_SUCCESS 任务发信号成功
+*   OSE_FAILURE 任务发信号失败
 * Note:
 *******************************************************************************/
 Ose_status ose_task_signal(Ose_thread_cond* cond,Ose_mutex_id mutex_id)
@@ -354,7 +354,7 @@ Ose_status ose_task_timedwait(Ose_thread_cond* cond,Ose_mutex_id mutex_id)
 *
 * Return:
 *   OSE_SUCCESS 任务删除成功
-*   OSE_FAILURE 任务没删除失�?
+*   OSE_FAILURE 任务没删除失败
 * Note:
 *******************************************************************************/
 Ose_status ose_delete_task(Ose_task_id tid)
@@ -366,18 +366,18 @@ Ose_status ose_delete_task(Ose_task_id tid)
         return OSE_FAILURE;
     }
 
-    /*检查任务是否创�?*/
+    /*检查任务是否创建*/
     if(OSE_FALSE == ose_is_task_created(tid))
     {
         return OSE_FAILURE;
     }
 
-    /*置任务控制字段的标志�?*/
+    /*置任务控制字段的标志位*/
     g_ose_task_spec_tbl[tid].is_used = OSE_FALSE;
 
 /*删除任务.*/
 #ifdef LINUX_SWITCH
-    /*不再使用线程属性，将其销�?*/
+    /*不再使用线程属性，将其销毁*/
     ret = pthread_attr_destroy(&(g_ose_task_spec_tbl[tid].task_attr)); 
     if(ret != 0)
     {
@@ -403,7 +403,7 @@ Ose_status ose_delete_task(Ose_task_id tid)
 }
 /*****************************************************************************
 * Function  : ose_task_delete_all
-* Purpose   : 删除所有任�?
+* Purpose   : 删除所有任务
 * Relation  :
 *
 * Input Parameters:
@@ -441,7 +441,7 @@ Ose_status ose_task_delete_all()
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
 *       param               UINT32               In          任务编号
-* Return: �?
+* Return: 无
 * Note:
 *******************************************************************************/
 void* ose_task_entry(void* param_ptr)
@@ -449,7 +449,7 @@ void* ose_task_entry(void* param_ptr)
     Ose_task_param    param  = 0;
 
     param = *(Ose_task_param*)param_ptr;
-    /*执行任务初始�?*/
+    /*执行任务初始化*/
     ose_task_entry_init(param);
 #ifdef LINUX_SWITCH
     ose_post_task_signal();
@@ -460,7 +460,7 @@ void* ose_task_entry(void* param_ptr)
 }
 /*****************************************************************************
 * Function  : ose_task_entry_init
-* Purpose   : 标准任务初始�?
+* Purpose   : 标准任务初始化
 * Relation  :
 *
 * Input Parameters:
@@ -468,7 +468,7 @@ void* ose_task_entry(void* param_ptr)
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
 *   param             Ose_task_param                In          任务编号
-* Return: �?
+* Return: 无
 * Note:
 *******************************************************************************/
 void ose_task_entry_init(Ose_task_param param)
@@ -524,7 +524,7 @@ void ose_task_entry_init(Ose_task_param param)
 
 /*****************************************************************************
 * Function  : ose_task_entry_main
-* Purpose   : 标准任务处理fsm消息的函�?
+* Purpose   : 标准任务处理fsm消息的函数
 * Relation  :
 *
 * Input Parameters:
@@ -532,7 +532,7 @@ void ose_task_entry_init(Ose_task_param param)
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
 *       param              UINT32                In          任务编号
-* Return: �?
+* Return: 无
 * Note:
 *******************************************************************************/
 void ose_task_entry_main(Ose_task_param param)
@@ -547,9 +547,9 @@ void ose_task_entry_main(Ose_task_param param)
     /*任务处于一个循环接收消息里*/
     while(1)
     {
-        /*取出任务间邮箱里的消�?*/
+        /*取出任务间邮箱里的消息*/
         fsm_msg_ptr = (Ose_fsm_message*)ose_get_from_mb(tid, OSE_WAIT_FOREVER);
-        /*调用对应任务的主函数处理该消�?*/
+        /*调用对应任务的主函数处理该消息*/
         (*g_ose_task_desc_tbl[tid].task_func.task_main)(fsm_msg_ptr);
     }
 }

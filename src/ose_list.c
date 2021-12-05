@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_list.c                                                  */
-/* Description   : æä¾›å¸¸è§é˜Ÿåˆ—ç­‰æŽ¥å?                                             */
+/* Description   : Ìá¹©³£¼û¶ÓÁÐµÈ½Ó¿Ú                                             */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -13,35 +13,35 @@
 
 /*****************************************************************************
 * Function  : ose_create_fixed_queue
-* Purpose   : åˆ›å»ºä¸€ä¸ªå›ºå®šé•¿åº¦çš„é˜Ÿåˆ—
+* Purpose   : ´´½¨Ò»¸ö¹Ì¶¨³¤¶ÈµÄ¶ÓÁÐ
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   queue_len           UINT32                  In          é˜Ÿåˆ—å…ƒç´ ä¸ªæ•°
+*   queue_len           UINT32                  In          ¶ÓÁÐÔªËØ¸öÊý
 *
 *
 * Return:
-*   éžNULL:åˆ›å»ºæˆåŠŸ
-*   NULL: åˆ›å»ºå¤±è´¥
+*   ·ÇNULL:´´½¨³É¹¦
+*   NULL: ´´½¨Ê§°Ü
 * Note:
 *******************************************************************************/
 Ose_fixed_queue* ose_create_fixed_queue(UINT32 queue_len)
 {
     Ose_fixed_queue* queue_ptr;
 
-    /*é˜Ÿåˆ—é•¿åº¦ä¸èƒ½ä¸?0*/
+    /*¶ÓÁÐ³¤¶È²»ÄÜÎª0*/
     if(1 >= queue_len)
     {
         return (Ose_fixed_queue*)NULL;
     }
 
-    /*å¼€è¾Ÿé˜Ÿåˆ—ç©ºé—?*/
+    /*¿ª±Ù¶ÓÁÐ¿Õ¼ä*/
     queue_ptr = (Ose_fixed_queue*)ose_get_mem(OSE_PRIVATE_POOL_ID,sizeof(Ose_fixed_queue) + sizeof(UINT32*) * queue_len);
 
-    /*åˆå§‹åŒ–é˜Ÿåˆ?*/
+    /*³õÊ¼»¯¶ÓÁÐ*/
     queue_ptr->head      = 0;
     queue_ptr->tail      = 0;
     queue_ptr->free_tail = 0;
@@ -54,34 +54,34 @@ Ose_fixed_queue* ose_create_fixed_queue(UINT32 queue_len)
 }
 /*****************************************************************************
 * Function  : ose_add_fixed_queue_tail
-* Purpose   : å‘é˜Ÿåˆ—å°¾éƒ¨æ’å…¥ä¸€ä¸ªç»“ç‚?
+* Purpose   : Ïò¶ÓÁÐÎ²²¿²åÈëÒ»¸ö½áµã
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   queue_ptr           Ose_fixed_queue         In          é˜Ÿåˆ—æŽ§åˆ¶å­—æ®µ
-*   item                UINT32                  In          éœ€è¦æ’å…¥çš„æ•°æ®
+*   queue_ptr           Ose_fixed_queue         In          ¶ÓÁÐ¿ØÖÆ×Ö¶Î
+*   item                UINT32                  In          ÐèÒª²åÈëµÄÊý¾Ý
 *
 * Return:
-*   OSE_SUCCESS :æ’å…¥æˆåŠŸ
-*   OSE_FAILURE :æ’å…¥å¤±è´¥
+*   OSE_SUCCESS :²åÈë³É¹¦
+*   OSE_FAILURE :²åÈëÊ§°Ü
 * Note:
 *******************************************************************************/
 Ose_status ose_add_fixed_queue_tail(Ose_fixed_queue* queue_ptr, UINT32 item)
 {
-    /*ç‰¹æ®Šå¤„ç†é‚®ç®±æ»¡çš„æƒ…å†µ*/
+    /*ÌØÊâ´¦ÀíÓÊÏäÂúµÄÇé¿ö*/
     if((queue_ptr->head != queue_ptr->tail) && (queue_ptr->head == queue_ptr->free_tail))
     {
         return OSE_FAILURE;
     }
-    /*ç‰¹æ®Šå¤„ç†é‚®ç®±ç©ºçš„æƒ…å†µ*/
+    /*ÌØÊâ´¦ÀíÓÊÏä¿ÕµÄÇé¿ö*/
     else if((queue_ptr->head == queue_ptr->tail) && (queue_ptr->tail == queue_ptr->free_tail))
     {
         /*NULL;*/
     }
-    /*ä¸€èˆ¬æƒ…å†?*/
+    /*Ò»°ãÇé¿ö*/
     else
     {
         if((++queue_ptr->tail) == queue_ptr->maxnum)
@@ -90,7 +90,7 @@ Ose_status ose_add_fixed_queue_tail(Ose_fixed_queue* queue_ptr, UINT32 item)
         }
     }
 
-    /*free_tailåŽç§»*/
+    /*free_tailºóÒÆ*/
     if((++queue_ptr->free_tail) >= queue_ptr->maxnum)
     {
         queue_ptr->free_tail = 0;
@@ -101,38 +101,38 @@ Ose_status ose_add_fixed_queue_tail(Ose_fixed_queue* queue_ptr, UINT32 item)
 }
 /*****************************************************************************
 * Function  : ose_add_fixed_queue_head
-* Purpose   : å‘é˜Ÿåˆ—å¤´éƒ¨æ’å…¥ä¸€ä¸ªç»“ç‚?
+* Purpose   : Ïò¶ÓÁÐÍ·²¿²åÈëÒ»¸ö½áµã
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   queue_ptr           Ose_fixed_queue         In          é˜Ÿåˆ—æŽ§åˆ¶å­—æ®µ
-*   item                UINT32                  In          éœ€è¦æ’å…¥çš„æ•°æ®
+*   queue_ptr           Ose_fixed_queue         In          ¶ÓÁÐ¿ØÖÆ×Ö¶Î
+*   item                UINT32                  In          ÐèÒª²åÈëµÄÊý¾Ý
 *
 * Return:
-*   OSE_SUCCESS :æ’å…¥æˆåŠŸ
-*   OSE_FAILURE :æ’å…¥å¤±è´¥
+*   OSE_SUCCESS :²åÈë³É¹¦
+*   OSE_FAILURE :²åÈëÊ§°Ü
 * Note:
 *******************************************************************************/
 Ose_status ose_add_fixed_queue_head(Ose_fixed_queue* queue_ptr, UINT32 item)
 {
-    /*ç‰¹æ®Šå¤„ç†é‚®ç®±æ»¡çš„æƒ…å†µ*/
+    /*ÌØÊâ´¦ÀíÓÊÏäÂúµÄÇé¿ö*/
     if((queue_ptr->head != queue_ptr->tail) && (queue_ptr->head == queue_ptr->free_tail))
     {
         return OSE_FAILURE;
     }
-    /*ç‰¹æ®Šå¤„ç†é‚®ç®±ç©ºçš„æƒ…å†µ*/
+    /*ÌØÊâ´¦ÀíÓÊÏä¿ÕµÄÇé¿ö*/
     else if((queue_ptr->head == queue_ptr->tail) && (queue_ptr->tail == queue_ptr->free_tail))
     {
-        /*free_tailåŽç§»*/
+        /*free_tailºóÒÆ*/
         if((++queue_ptr->free_tail) >= queue_ptr->maxnum)
         {
             queue_ptr->free_tail = 0;
         }
     }
-    /*ä¸€èˆ¬æƒ…å†?*/
+    /*Ò»°ãÇé¿ö*/
     else
     {
         if(queue_ptr->head == 0)
@@ -151,37 +151,37 @@ Ose_status ose_add_fixed_queue_head(Ose_fixed_queue* queue_ptr, UINT32 item)
 }
 /*****************************************************************************
 * Function  : ose_get_fixed_queue_head
-* Purpose   : èŽ·å–é˜Ÿåˆ—å¤´éƒ¨ä¸€ä¸ªç»“ç‚?
+* Purpose   : »ñÈ¡¶ÓÁÐÍ·²¿Ò»¸ö½áµã
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   queue_ptr           Ose_fixed_queue         In          é˜Ÿåˆ—æŽ§åˆ¶å­—æ®µ
-*   item                UINT32                  In          éœ€è¦æ’å…¥çš„æ•°æ®
+*   queue_ptr           Ose_fixed_queue         In          ¶ÓÁÐ¿ØÖÆ×Ö¶Î
+*   item                UINT32                  In          ÐèÒª²åÈëµÄÊý¾Ý
 *
 * Return:
-*   OSE_SUCCESS :èŽ·å–æˆåŠŸ
-*   OSE_FAILURE :èŽ·å–å¤±è´¥
+*   OSE_SUCCESS :»ñÈ¡³É¹¦
+*   OSE_FAILURE :»ñÈ¡Ê§°Ü
 * Note:
 *******************************************************************************/
 Ose_status ose_get_fixed_queue_head(Ose_fixed_queue* queue_ptr, UINT32* item_ptr)
 {
-    /*ç‰¹æ®Šå¤„ç†é‚®ç®±ç©ºçš„æƒ…å†µ*/
+    /*ÌØÊâ´¦ÀíÓÊÏä¿ÕµÄÇé¿ö*/
     if((queue_ptr->head == queue_ptr->tail) && (queue_ptr->tail == queue_ptr->free_tail))
     {
         return OSE_FAILURE;
     }
 
-    /*å–å‡ºç»“ç‚¹*/
+    /*È¡³ö½áµã*/
     *item_ptr = queue_ptr->node[queue_ptr->head];
-    /*ç‰¹æ®Šå¤„ç†é‚®ç®±åªæœ‰ä¸€ä¸ªæ¶ˆæ¯çš„æƒ…å†µ*/
+    /*ÌØÊâ´¦ÀíÓÊÏäÖ»ÓÐÒ»¸öÏûÏ¢µÄÇé¿ö*/
     if((queue_ptr->head == queue_ptr->tail) && (queue_ptr->tail != queue_ptr->free_tail))
     {
         queue_ptr->free_tail = queue_ptr->head;
     }
-    /*ä¸€èˆ¬æƒ…å†?*/
+    /*Ò»°ãÇé¿ö*/
     else
     {
         if((++queue_ptr->head) == queue_ptr->maxnum)
@@ -194,35 +194,35 @@ Ose_status ose_get_fixed_queue_head(Ose_fixed_queue* queue_ptr, UINT32* item_ptr
 }
 /*****************************************************************************
 * Function  : ose_get_fixed_queue_spare
-* Purpose   :èŽ·å–å›ºå®šé˜Ÿåˆ—çš„å‰©ä½™å®¹é‡?
+* Purpose   :»ñÈ¡¹Ì¶¨¶ÓÁÐµÄÊ£ÓàÈÝÁ¿
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   queue_ptr           Ose_fixed_queue         In          é˜Ÿåˆ—æŽ§åˆ¶å­—æ®µ
-*   max_num_ptr         UINT32*                 In          é˜Ÿåˆ—æ€»å®¹é‡å­˜æ”¾åœ°å€
-*   available_num_ptr   UINT32*                 In          é˜Ÿåˆ—å‰©ä½™ç©ºé—´å­˜æ”¾åœ°å€
-* Return: æ—?
+*   queue_ptr           Ose_fixed_queue         In          ¶ÓÁÐ¿ØÖÆ×Ö¶Î
+*   max_num_ptr         UINT32*                 In          ¶ÓÁÐ×ÜÈÝÁ¿´æ·ÅµØÖ·
+*   available_num_ptr   UINT32*                 In          ¶ÓÁÐÊ£Óà¿Õ¼ä´æ·ÅµØÖ·
+* Return: ÎÞ
 * Note:
 *******************************************************************************/
 void ose_get_fixed_queue_spare(Ose_fixed_queue* queue_ptr, UINT32* max_num_ptr, UINT32* available_num_ptr)
 {
-    /*å†…éƒ¨å‡½æ•°ï¼Œä¸åˆ¤æ–­ç©ºæŒ‡é’ˆäº†*/
+    /*ÄÚ²¿º¯Êý£¬²»ÅÐ¶Ï¿ÕÖ¸ÕëÁË*/
 
-    /*å–å‡ºæ€»å®¹é‡?*/
+    /*È¡³ö×ÜÈÝÁ¿*/
     *max_num_ptr = queue_ptr->maxnum;
 
-    /*å–å‡ºå‰©ä½™ç©ºé—´*/
+    /*È¡³öÊ£Óà¿Õ¼ä*/
     if((queue_ptr->head == queue_ptr->free_tail) && (queue_ptr->tail == queue_ptr->free_tail))
     {
-        /*é‚®ç®±ç©?*/
+        /*ÓÊÏä¿Õ*/
         *available_num_ptr = queue_ptr->maxnum;
     }
     else if(queue_ptr->head == queue_ptr->free_tail)
     {
-        /*ç©ºé—´æ»?*/
+        /*¿Õ¼äÂú*/
         *available_num_ptr = 0;
     }
     else if(queue_ptr->head < queue_ptr->free_tail)
@@ -236,18 +236,18 @@ void ose_get_fixed_queue_spare(Ose_fixed_queue* queue_ptr, UINT32* max_num_ptr, 
 }
 /*****************************************************************************
 * Function  : ose_delete_fixed_queue
-* Purpose   : åˆ é™¤é˜Ÿåˆ—
+* Purpose   : É¾³ý¶ÓÁÐ
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   queue_ptr           Ose_fixed_queue         In          é˜Ÿåˆ—æŽ§åˆ¶å­—æ®µ
+*   queue_ptr           Ose_fixed_queue         In          ¶ÓÁÐ¿ØÖÆ×Ö¶Î
 *
 * Return:
-*   OSE_SUCCESS :èŽ·å–æˆåŠŸ
-*   OSE_FAILURE :èŽ·å–å¤±è´¥
+*   OSE_SUCCESS :»ñÈ¡³É¹¦
+*   OSE_FAILURE :»ñÈ¡Ê§°Ü
 * Note:
 *******************************************************************************/
 Ose_status ose_delete_fixed_queue(Ose_fixed_queue* queue_ptr)

@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_mutex.c                                                  */
-/* Description   : 互斥�?                                                       */
+/* Description   : 互斥量                                                       */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -19,7 +19,7 @@ Ose_mutex_id     g_ose_mutex_lock = OSE_UNAVAILABLE_ID;
 
 /*****************************************************************************
 * Function  : ose_init_mutex
-* Purpose   : OSE互斥量管理模块的初始�?
+* Purpose   : OSE互斥量管理模块的初始化
 * Relation  :
 *
 * Input Parameters:
@@ -29,15 +29,15 @@ Ose_mutex_id     g_ose_mutex_lock = OSE_UNAVAILABLE_ID;
 *       N/A                 N/A
 *
 * Return:
-*   OSE_SUCCESS 初始化成�?
-*   OSE_FAILURE 初始化失�?
+*   OSE_SUCCESS 初始化成功
+*   OSE_FAILURE 初始化失败
 * Note:
 *******************************************************************************/
 Ose_status ose_init_mutex()
 {
     UINT32 index;
 
-/*初始化控制字�?*/
+/*初始化控制字段*/
 #ifdef LINUX_SWITCH
     for(index = 0; index < OSE_MAX_MUTEXES; index++)
     {
@@ -46,21 +46,21 @@ Ose_status ose_init_mutex()
         memset(&(ose_mutex[index].mutex),0x00,sizeof(pthread_mutex_t));
     }
 #endif
-    /*创建一个公共互斥量，OSE用于对ose_mutex的保�?*/
+    /*创建一个公共互斥量，OSE用于对ose_mutex的保护*/
     return ose_create_init_mutex((Ose_mutex_name)"OseMutexProt", &g_ose_mutex_lock, OSE_TRUE);
 }
 /*****************************************************************************
 * Function  : ose_create_init_mutex
-* Purpose   : OSE初始化完成之前，创建互斥�?
+* Purpose   : OSE初始化完成之前，创建互斥量
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   name                Ose_mutex_name          In          互斥量名�?
+*   name                Ose_mutex_name          In          互斥量名称
 *   mutex_ptr           Ose_mutex_id*           Out         互斥量id存放地址
-*   flag                Bool                    In          互斥量的初时状�?
+*   flag                Bool                    In          互斥量的初时状态
 *
 * Return:
 *   OSE_SUCCESS :成功
@@ -91,7 +91,7 @@ Ose_status ose_create_init_mutex(Ose_mutex_name name, Ose_mutex_id* mutex_ptr, B
                 OSE_ERROR("ose_create_init_mutex ERROR: ");
                 return OSE_FAILURE;
             }
-            /*该index对应的互斥资源分配出�?*/
+            /*该index对应的互斥资源分配出去*/
             ose_mutex[index].is_used = OSE_TRUE;
             ose_mutex[index].name    = name_ptr;
             /*申请的互斥量id*/
@@ -105,15 +105,15 @@ Ose_status ose_create_init_mutex(Ose_mutex_name name, Ose_mutex_id* mutex_ptr, B
 }
 /*****************************************************************************
 * Function  : ose_create_mutex
-* Purpose   : 创建互斥�?
+* Purpose   : 创建互斥量
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*   name                Ose_mutex_name          In          互斥量名�?
-*   flag                Bool                    In          互斥量的初时状�?
+*   name                Ose_mutex_name          In          互斥量名称
+*   flag                Bool                    In          互斥量的初时状态
 *
 * Return:
 *   OSE_UNAVAILABLE_ID  :失败
@@ -128,7 +128,7 @@ Ose_mutex_id ose_create_mutex(Ose_mutex_name name, Bool flag)
     /*因该接口可能被多个任务同时调用，首先进行创建互斥*/
     ose_obtain_mutex(g_ose_mutex_lock, OSE_WAIT_FOREVER);
 
-    /*根据flag创建互斥�?*/
+    /*根据flag创建互斥量*/
     switch(flag)
     {
         case OSE_TRUE:
@@ -162,7 +162,7 @@ Ose_mutex_id ose_create_mutex(Ose_mutex_name name, Bool flag)
 }
 /*****************************************************************************
 * Function  : ose_obtain_mutex
-* Purpose   : 获取互斥�?(get)
+* Purpose   : 获取互斥量(get)
 * Relation  :
 *
 * Input Parameters:
@@ -186,13 +186,13 @@ Ose_status ose_obtain_mutex(Ose_mutex_id id, Ose_timeout timeout)
         ose_trace(OSE_TRACE_ERROR,"[ose_obtain_mutex]: mutex id %d !!!",id);
         return OSE_FAILURE;
     }
-    /*判断互斥量是否创�?*/
+    /*判断互斥量是否创建*/
     if(OSE_FALSE == ose_is_mutex_created(id))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_obtain_mutex]: %d mutex is created !!!",id);
         return OSE_FAILURE;
     }
-/*linux系统获取互斥�?*/
+/*linux系统获取互斥量*/
 #ifdef LINUX_SWITCH
     ret_lx = pthread_mutex_lock(&(ose_mutex[id].mutex));
     if(ret_lx == 0)
@@ -208,7 +208,7 @@ Ose_status ose_obtain_mutex(Ose_mutex_id id, Ose_timeout timeout)
 }
 /*****************************************************************************
 * Function  : ose_release_mutex
-* Purpose   : 释放互斥�?(put)
+* Purpose   : 释放互斥量(put)
 * Relation  :
 *
 * Input Parameters:
@@ -221,7 +221,7 @@ Ose_status ose_obtain_mutex(Ose_mutex_id id, Ose_timeout timeout)
 *   OSE_SUCCESS :成功
 *   OSE_FAILURE :失败
 * Note:     只要id不非法，互斥量创建；那么该函数不会返回OSE_FAILURE
-    其他异常，OSE阻塞任务，不返回�?
+    其他异常，OSE阻塞任务，不返回。
 *******************************************************************************/
 Ose_status ose_release_mutex(Ose_mutex_id id)
 {
@@ -233,7 +233,7 @@ Ose_status ose_release_mutex(Ose_mutex_id id)
         return OSE_FAILURE;
     }
 
-    /*判断互斥量是否创�?*/
+    /*判断互斥量是否创建*/
     if(OSE_FALSE == ose_is_mutex_created(id))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_release_mutex]: %d mutex is created !!!",id);
@@ -250,7 +250,7 @@ Ose_status ose_release_mutex(Ose_mutex_id id)
 }
 /*****************************************************************************
 * Function  : ose_delete_mutex
-* Purpose   : 删除互斥�?
+* Purpose   : 删除互斥量
 * Relation  :
 *
 * Input Parameters:
@@ -263,8 +263,8 @@ Ose_status ose_release_mutex(Ose_mutex_id id)
 *   OSE_SUCCESS :成功
 *   OSE_FAILURE :失败
 * Note:     只要id不非法，互斥量创建；那么该函数不会返回OSE_FAILURE
-    其他异常，OSE阻塞任务，不返回�?
-    删除互斥量带来的临界问题，需要上层考虑�?
+    其他异常，OSE阻塞任务，不返回。
+    删除互斥量带来的临界问题，需要上层考虑。
 *******************************************************************************/
 Ose_status ose_delete_mutex(Ose_mutex_id id)
 {
@@ -276,7 +276,7 @@ Ose_status ose_delete_mutex(Ose_mutex_id id)
         return OSE_FAILURE;
     }
 
-    /*判断互斥量是否创�?*/
+    /*判断互斥量是否创建*/
     if(OSE_FALSE == ose_is_mutex_created(id))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_delete_mutex]: %d mutex is created !!!",id);
@@ -308,7 +308,7 @@ Ose_status ose_delete_mutex(Ose_mutex_id id)
 *
 * Return:
 *   OSE_TRUE    :创建
-*   OSE_FALSE   :没创�?
+*   OSE_FALSE   :没创建
 * Note:
 *******************************************************************************/
 Bool ose_is_mutex_created(Ose_mutex_id id)
@@ -324,7 +324,7 @@ Bool ose_is_mutex_created(Ose_mutex_id id)
 }
 /*****************************************************************************
 * Function  : ose_mutex_delete_all
-* Purpose   : 删除所有已使用互斥�?
+* Purpose   : 删除所有已使用互斥量
 * Relation  :
 *
 * Input Parameters:

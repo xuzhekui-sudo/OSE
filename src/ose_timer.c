@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_timer.c                                                 */
-/* Description   : 定时器管�?                                                  */
+/* Description   : 定时器管理                                                  */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -13,7 +13,7 @@
 
 /*定时器资源的定义*/
 Ose_timer       ose_timer[OSE_MAX_TIMERS];
-/*定时器模块的互斥�?*/
+/*定时器模块的互斥量*/
 Ose_mutex_id    ose_tm_lock = OSE_UNAVAILABLE_ID;
 
 /*****************************************************************************
@@ -28,8 +28,8 @@ Ose_mutex_id    ose_tm_lock = OSE_UNAVAILABLE_ID;
 *
 *
 * Return:
-*   OSE_SUCCESS 初始化成�?
-*   OSE_FAILURE 初始化失�?
+*   OSE_SUCCESS 初始化成功
+*   OSE_FAILURE 初始化失败
 * Note:
 *******************************************************************************/
 Ose_status ose_init_timer()
@@ -46,7 +46,7 @@ Ose_status ose_init_timer()
         ose_timer[index].callback = NULL;
     }
 
-    /*创建定时器模块的互斥�?*/
+    /*创建定时器模块的互斥量*/
     ose_tm_lock = ose_create_mutex((Ose_mutex_name) "TMMutex", OSE_TRUE);
     if(ose_tm_lock == OSE_UNAVAILABLE_ID)
     {
@@ -55,17 +55,17 @@ Ose_status ose_init_timer()
 
     return OSE_SUCCESS;
 }
-/*定时器相关接口函�?*/
+/*定时器相关接口函数*/
 /*****************************************************************************
 * Function  : ose_create_timer
-* Purpose   : 创建定时�?
+* Purpose   : 创建定时器
 * Relation  :
 *
 * Input Parameters:
 *
 *       Name                Type                In/Out      Description
 *   -----------         --------------          ------      -----------
-*       flag            Ose_timer_flag          In          定时器类�?
+*       flag            Ose_timer_flag          In          定时器类型
 * Return: 定时器id
 * Note:
 *******************************************************************************/
@@ -75,7 +75,7 @@ Ose_timer_id ose_create_timer(Ose_timer* timer_ptr)
     Ose_status          result  = OSE_FAILURE;
     struct sigevent     sig_event;
 
-    /*获取互斥�?*/
+    /*获取互斥量*/
     ose_obtain_mutex(ose_tm_lock, OSE_WAIT_FOREVER);
 
     for(index = 0; index < OSE_MAX_TIMERS; index++)
@@ -89,7 +89,7 @@ Ose_timer_id ose_create_timer(Ose_timer* timer_ptr)
 
             memset(&sig_event, 0, sizeof(struct sigevent));
             sig_event.sigev_value.sival_int = ose_timer[index].timer_id;        //回调函数参数
-            sig_event.sigev_notify = SIGEV_THREAD;                              //线程通知的方式，派驻新线�?
+            sig_event.sigev_notify = SIGEV_THREAD;                              //线程通知的方式，派驻新线程
             sig_event.sigev_notify_function = timer_ptr->callback;              //线程函数地址
             if(timer_create(CLOCK_REALTIME, &sig_event, &(ose_timer[index].plt_timer_id)) != 0)  
             {  
@@ -117,7 +117,7 @@ Ose_timer_id ose_create_timer(Ose_timer* timer_ptr)
 }
 /*****************************************************************************
 * Function  : ose_start_timer
-* Purpose   : 定时器开�?
+* Purpose   : 定时器开启
 * Relation  :
 *
 * Input Parameters:
@@ -146,7 +146,7 @@ Ose_status ose_start_timer(Ose_timer_id id)
         ose_trace(OSE_TRACE_ERROR,"[ose_start_timer]: max timer id !!!");
         return OSE_FAILURE;
     }
-    /*获取互斥�?*/
+    /*获取互斥量*/
     ose_obtain_mutex(ose_tm_lock, OSE_WAIT_FOREVER);
     /*获取定时器结点的指针*/
     pstTimer = &ose_timer[id];
@@ -175,7 +175,7 @@ Ose_status ose_start_timer(Ose_timer_id id)
 }
 /*****************************************************************************
 * Function  : ose_stop_timer
-* Purpose   : 定时器停止计�?
+* Purpose   : 定时器停止计时
 * Relation  :
 *
 * Input Parameters:
@@ -203,7 +203,7 @@ Ose_status ose_stop_timer(Ose_timer_id id)
         return OSE_FAILURE;
     }
 
-    /*获取互斥�?*/
+    /*获取互斥量*/
     ose_obtain_mutex(ose_tm_lock, OSE_WAIT_FOREVER);
 
     /*获取定时器结点的指针*/
@@ -217,7 +217,7 @@ Ose_status ose_stop_timer(Ose_timer_id id)
         return OSE_FAILURE;
     }
 
-    /*停止对应定时�?*/
+    /*停止对应定时器*/
     //间隔时间
     it.it_interval.tv_sec = 0;
     it.it_interval.tv_nsec = 0;
@@ -238,7 +238,7 @@ Ose_status ose_stop_timer(Ose_timer_id id)
 }
 /*****************************************************************************
 * Function  : ose_delete_timer
-* Purpose   : 删除定时�?
+* Purpose   : 删除定时器
 * Relation  :
 *
 * Input Parameters:
@@ -265,7 +265,7 @@ Ose_status ose_delete_timer(Ose_timer_id id)
         return OSE_FAILURE;
     }
 
-    /*获取互斥�?*/
+    /*获取互斥量*/
     ose_obtain_mutex(ose_tm_lock, OSE_WAIT_FOREVER);
 
     /*获取定时器结点的指针*/
@@ -298,7 +298,7 @@ Ose_status ose_delete_timer(Ose_timer_id id)
 }
 /*****************************************************************************
 * Function  : ose_change_timer_value
-* Purpose   : 修改定时器时�?
+* Purpose   : 修改定时器时间
 * Relation  :
 *
 * Input Parameters:
@@ -322,7 +322,7 @@ Ose_status ose_change_timer_value(Ose_timer_id id , Ose_timer_value timer_value)
         ose_trace(OSE_TRACE_ERROR,"[ose_change_timer_value]: max timer id !!!");
         return OSE_FAILURE;
     }
-    /*获取互斥�?*/
+    /*获取互斥量*/
     ose_obtain_mutex(ose_tm_lock, OSE_WAIT_FOREVER);
     /*获取定时器结点的指针*/
     pstTimer = &ose_timer[id];
@@ -339,7 +339,7 @@ Ose_status ose_change_timer_value(Ose_timer_id id , Ose_timer_value timer_value)
 }
 /*****************************************************************************
 * Function  : ose_timer_delete_all
-* Purpose   : 删除所有已使用定时�?
+* Purpose   : 删除所有已使用定时器
 * Relation  :
 *
 * Input Parameters:
@@ -356,7 +356,7 @@ Ose_status ose_timer_delete_all()
     {
         if(ose_timer[index].plt_timer_id != 0)
         {
-            /*删除定时�?*/
+            /*删除定时器*/
             ose_delete_timer(index);
         }
         ose_timer[index].timer_id = OSE_MAX_TIMERS;

@@ -1,6 +1,6 @@
 /*******************************************************************************/
 /* Filename      : ose_link.c                                                  */
-/* Description   : 閾捐〃                                                        */
+/* Description   : 链表                                                        */
 /*                                                                             */
 /* Notes         :                                                             */
 /*                                                                             */
@@ -14,7 +14,7 @@
 
 /******************************************************************************/
 /* Function  : ose_link_list_create                                           */
-/* Purpose   : 鍒涘缓閾捐〃                                                       */
+/* Purpose   : 创建链表                                                       */
 /* Parameters:                                                                */
 /* Return    :                                                                */
 /* @ LINK_LIST* link_list                                                     */
@@ -31,7 +31,7 @@ LINK_LIST* ose_link_list_create()
 } 
 /******************************************************************************/
 /* Function  : ose_link_list_free                                             */
-/* Purpose   : 閲婃斁閾捐〃                                                       */
+/* Purpose   : 释放链表                                                       */
 /* Parameters:                                                                */
 /* @ LINK_LIST* link_list                                                     */
 /* Return    :                                                                */
@@ -50,7 +50,7 @@ void ose_link_list_free(LINK_LIST * list)
 } 
 /******************************************************************************/
 /* Function  : ose_link_list_insert_tail                                      */
-/* Purpose   : 鎻掑叆鍦ㄥ熬閮?                                                     */
+/* Purpose   : 插入在尾部                                                     */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* @ void* const data                                                         */
@@ -76,7 +76,7 @@ void ose_link_list_insert_tail(LINK_LIST * const list, void* const data)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_insert_head                                      */
-/* Purpose   : 鎻掑叆鍦ㄩ閮?                                                     */
+/* Purpose   : 插入在首部                                                     */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* @ void* const data                                                         */
@@ -103,7 +103,7 @@ void ose_link_list_insert_head(LINK_LIST * const list, void* const data)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_get_size                                         */
-/* Purpose   : 鍙栧緱闀垮害                                                       */
+/* Purpose   : 取得长度                                                       */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* Return    :                                                                */
@@ -114,7 +114,7 @@ SINT32 ose_link_list_get_size(const LINK_LIST * const list)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_remove_tail                                      */
-/* Purpose   : 鍒犻櫎鍦ㄥ熬閮?                                                     */
+/* Purpose   : 删除在尾部                                                     */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* Return    :                                                                */
@@ -141,7 +141,7 @@ void* ose_link_list_remove_tail(LINK_LIST* const list)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_remove_head                                      */
-/* Purpose   : 鍒犻櫎鍦ㄩ閮?                                                     */
+/* Purpose   : 删除在首部                                                     */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* Return    :                                                                */
@@ -165,7 +165,7 @@ void* ose_link_list_remove_head(LINK_LIST * const list)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_insert_at                                        */
-/* Purpose   : 鎻掑叆鍦ㄨ帿涓綅                                                   */
+/* Purpose   : 插入在莫个位                                                   */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* @ void* const data                                                         */
@@ -204,7 +204,7 @@ void ose_link_list_insert_at(LINK_LIST * const list, void* const data, SINT32 in
 }
 /******************************************************************************/
 /* Function  : ose_link_list_remove_at                                        */
-/* Purpose   : 鍒犻櫎鍦ㄨ帿涓綅                                                   */
+/* Purpose   : 删除在莫个位                                                   */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* @ SINT32 index                                                             */
@@ -246,7 +246,7 @@ void* ose_link_list_remove_at(LINK_LIST* const list, SINT32 index)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_get_data_at                                      */
-/* Purpose   : 鍙栧緱鏁版嵁                                                       */
+/* Purpose   : 取得数据                                                       */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* @ SINT32 index                                                             */
@@ -275,7 +275,7 @@ void* ose_link_list_get_data_at(const LINK_LIST * const list, SINT32 index)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_get_data_head                                    */
-/* Purpose   : 鍙栧緱绗竴涓暟鎹?                                                 */
+/* Purpose   : 取得第一个数据                                                 */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* Return    :                                                                */
@@ -286,7 +286,7 @@ void* ose_link_list_get_data_head(const LINK_LIST * const list)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_get_data_tail                                    */
-/* Purpose   : 鍙栧緱鏈�鍚庝竴涓暟鎹?                                               */
+/* Purpose   : 取得最后一个数据                                               */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* Return    :                                                                */
@@ -297,14 +297,14 @@ void* ose_link_list_get_data_tail(const LINK_LIST * const list)
 }
 /******************************************************************************/
 /* Function  : ose_link_list_find_data_index                                  */
-/* Purpose   : 鏌ユ壘鏌愪釜鏁版嵁鐨勪綅缃?                                             */
-/* @  鏌ユ壘鏌愪釜鏁版嵁鐨勪綅缃?,濡傛灉equal鏂规硶涓虹┖锛屾瘮杈冨湴鍧�锛屽惁鍒欒皟鐢╡qual鏂规硶       */
+/* Purpose   : 查找某个数据的位置                                             */
+/* @  查找某个数据的位置,如果equal方法为空，比较地址，否则调用equal方法       */
 /* Parameters:                                                                */
 /* @ LINK_LIST * const list                                                   */
 /* @ void * data                                                              */
 /* Return    :                                                                */
-/* @ -1: 涓嶅瓨鍦?                                                               */
-/* @ index: 瀛樺湪                                                              */
+/* @ -1: 不存在                                                               */
+/* @ index: 存在                                                              */
 /******************************************************************************/
 SINT32 ose_link_list_find_data_index(const LINK_LIST * const list, void * data)
 {

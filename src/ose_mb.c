@@ -12,7 +12,7 @@
 #define FILEID (OSE_FILE_ID_BASE + 5)
 
 extern Ose_task_desc_tbl g_ose_task_desc_tbl[OSE_MAX_TASKS];
-/*任务间邮�?*/
+/*任务间邮箱*/
 Ose_ext_mb ose_mailbox[OSE_MAX_MAILBOXS];
 /*每个元素对应当前索引的taskid，如果不为空即有回调*/
 Ose_mb_transform_func ose_tid_mid_transform_tbl[OSE_MAX_MAILBOXS];
@@ -30,9 +30,9 @@ Ose_mb_transform_func ose_tid_mid_transform_tbl[OSE_MAX_MAILBOXS];
 *
 *
 * Return:
-*   OSE_SUCCESS 初始化成�?
-*   OSE_FAILURE 初始化失�?
-* Note:     任务内邮箱不需要初始化，创建时动态建�?
+*   OSE_SUCCESS 初始化成功
+*   OSE_FAILURE 初始化失败
+* Note:     任务内邮箱不需要初始化，创建时动态建立
 *******************************************************************************/
 Ose_status ose_init_mb(void)
 {
@@ -60,7 +60,7 @@ Ose_status ose_init_mb(void)
 }
 /*****************************************************************************
 * Function  : ose_create_mb
-* Purpose   : 创建任务间邮�?
+* Purpose   : 创建任务间邮箱
 * Relation  :
 *
 * Input Parameters:
@@ -84,7 +84,7 @@ Ose_status ose_create_mb(Ose_mb_id mid, UINT32 max_nums)
         return OSE_MBIDOR_QID_ERROR;
     }
 
-    /*检查邮箱是否创�?*/
+    /*检查邮箱是否创建*/
     if(OSE_TRUE == ose_is_mb_created(mid))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_create_mb]: mailbox created !!!");
@@ -95,11 +95,11 @@ Ose_status ose_create_mb(Ose_mb_id mid, UINT32 max_nums)
     sprintf(ose_mailbox[mid].name.sema_lock_rd_name,"sema_lock_rd_task_%d",mid);
     sprintf(ose_mailbox[mid].name.sema_lock_wr_name,"sema_lock_wr_task_%d",mid);
     sprintf(ose_mailbox[mid].name.mutex_name,"queue_mutex_task_%d",mid);
-    /*创建读写信号量和互斥�?,不需要检查返回�?*/
+    /*创建读写信号量和互斥量,不需要检查返回值*/
     ose_mailbox[mid].sema_lock_rd = ose_create_sema(ose_mailbox[mid].name.sema_lock_rd_name, max_nums, OSE_FALSE);
     ose_mailbox[mid].sema_lock_wr = ose_create_sema(ose_mailbox[mid].name.sema_lock_wr_name, max_nums, OSE_TRUE);
 
-    /*创建任务间邮箱的操作互斥�?*/
+    /*创建任务间邮箱的操作互斥量*/
     ose_mailbox[mid].mutex = ose_create_mutex((Ose_mutex_name)ose_mailbox[mid].name.mutex_name, OSE_TRUE);
 
     /*创建邮箱队列*/
@@ -144,7 +144,7 @@ Ose_fsm_message* ose_get_from_mb(Ose_mb_id mid, Ose_timeout timeout)
         return (Ose_fsm_message*)NULL;
     }
 
-    /*检查邮箱是否创�?*/
+    /*检查邮箱是否创建*/
     if(OSE_TRUE != ose_is_mb_created(mid))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_get_from_mb]: mailbox created !!!");
@@ -152,8 +152,8 @@ Ose_fsm_message* ose_get_from_mb(Ose_mb_id mid, Ose_timeout timeout)
     }
 
 #ifdef LINUX_SWITCH
-    /*等待资源，如果有资源则直接返�?*/
-    /*读资源减少一�?*/
+    /*等待资源，如果有资源则直接返回*/
+    /*读资源减少一个*/
     ret_lx = ose_obtain_sema(ose_mailbox[mid].sema_lock_rd, timeout);
     if(ret_lx == OSE_WAIT_TIMEOUT)
     {
@@ -161,7 +161,7 @@ Ose_fsm_message* ose_get_from_mb(Ose_mb_id mid, Ose_timeout timeout)
         return (Ose_fsm_message*)NULL;
     }
 
-    /*获取互斥量，进入互斥�?*/
+    /*获取互斥量，进入互斥区*/
     ret_lx = ose_obtain_mutex(ose_mailbox[mid].mutex, OSE_WAIT_FOREVER);
     OSE_ASSERT(ret_lx == OSE_SUCCESS);
 
@@ -174,14 +174,14 @@ Ose_fsm_message* ose_get_from_mb(Ose_mb_id mid, Ose_timeout timeout)
         ose_trace(OSE_TRACE_ERROR,"[ose_get_from_mb]: mb queue null !!!");
         return (Ose_fsm_message*)NULL;
     }
-    /*增加一个可写资�?*/
+    /*增加一个可写资源*/
     ose_release_sema(ose_mailbox[mid].sema_lock_wr);
 #endif
     return fsm_msg_ptr;
 }
 /*****************************************************************************
 * Function  : ose_send_to_mb_ex
-* Purpose   : 向任务间邮箱的头部发送消�?
+* Purpose   : 向任务间邮箱的头部发送消息
 * Relation  :
 *
 * Input Parameters:
@@ -194,7 +194,7 @@ Ose_fsm_message* ose_get_from_mb(Ose_mb_id mid, Ose_timeout timeout)
 * Return:
 *   OSE_SUCCESS :成功
 *   OSE_FAILURE :失败
-*   OSE_WAIT_TIMEOUT    超时还没发送成�?
+*   OSE_WAIT_TIMEOUT    超时还没发送成功
 * Note:
 *******************************************************************************/
 Ose_status ose_send_to_mb_ex(Ose_mb_id mid, UINT8* msg_ptr, Ose_timeout timeout, Bool is_preferred)
@@ -208,7 +208,7 @@ Ose_status ose_send_to_mb_ex(Ose_mb_id mid, UINT8* msg_ptr, Ose_timeout timeout,
         return OSE_FAILURE;
     }
 
-    /*检查邮箱是否创�?*/
+    /*检查邮箱是否创建*/
     if(OSE_TRUE != ose_is_mb_created(mid))
     {
         ose_trace(OSE_TRACE_ERROR,"[ose_send_to_mb_ex]: mailbox created !!!");
@@ -233,7 +233,7 @@ Ose_status ose_send_to_mb_ex(Ose_mb_id mid, UINT8* msg_ptr, Ose_timeout timeout,
 }
 /*****************************************************************************
 * Function  : ose_send_to_mb_head
-* Purpose   : 向任务间邮箱的头部发送消�?
+* Purpose   : 向任务间邮箱的头部发送消息
 * Relation  :
 *
 * Input Parameters:
@@ -246,7 +246,7 @@ Ose_status ose_send_to_mb_ex(Ose_mb_id mid, UINT8* msg_ptr, Ose_timeout timeout,
 * Return:
 *   OSE_SUCCESS :成功
 *   OSE_FAILURE :失败
-*   OSE_WAIT_TIMEOUT    超时还没发送成�?
+*   OSE_WAIT_TIMEOUT    超时还没发送成功
 * Note:
 *******************************************************************************/
 Ose_status ose_send_to_mb_head(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_timeout timeout)
@@ -261,7 +261,7 @@ Ose_status ose_send_to_mb_head(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_time
         return OSE_WAIT_TIMEOUT;
     }
 
-    /*获取互斥量，进入互斥�?*/
+    /*获取互斥量，进入互斥区*/
     ose_obtain_mutex(ose_mailbox[mid].mutex, OSE_WAIT_FOREVER);
 
     /*插入队列头部*/
@@ -273,14 +273,14 @@ Ose_status ose_send_to_mb_head(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_time
         return OSE_FAILURE;
     }
 
-    /*增加一个可读资�?*/
+    /*增加一个可读资源*/
     ose_release_sema(ose_mailbox[mid].sema_lock_rd);
 #endif
     return OSE_SUCCESS;
 }
 /*****************************************************************************
 * Function  : ose_send_to_mb_tail
-* Purpose   : 向任务间邮箱的尾部发送消�?
+* Purpose   : 向任务间邮箱的尾部发送消息
 * Relation  :
 *
 * Input Parameters:
@@ -293,7 +293,7 @@ Ose_status ose_send_to_mb_head(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_time
 * Return:
 *   OSE_SUCCESS :成功
 *   OSE_FAILURE :失败
-*   OSE_WAIT_TIMEOUT    超时还没发送成�?
+*   OSE_WAIT_TIMEOUT    超时还没发送成功
 * Note:
 *******************************************************************************/
 Ose_status ose_send_to_mb_tail(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_timeout timeout)
@@ -307,7 +307,7 @@ Ose_status ose_send_to_mb_tail(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_time
         return OSE_WAIT_TIMEOUT;
     }
 
-    /*获取互斥量，进入互斥�?*/
+    /*获取互斥量，进入互斥区*/
     ose_obtain_mutex(ose_mailbox[mid].mutex, OSE_WAIT_FOREVER);
     /*插入队列头部*/
     ret_lx = ose_add_fixed_queue_tail(ose_mailbox[mid].blist_ptr, (UINT32)msg_ptr);
@@ -318,7 +318,7 @@ Ose_status ose_send_to_mb_tail(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_time
         return OSE_FAILURE;
     }
 
-    /*增加一个可读资�?*/
+    /*增加一个可读资源*/
     ose_release_sema(ose_mailbox[mid].sema_lock_rd);
 #endif
 
@@ -337,7 +337,7 @@ Ose_status ose_send_to_mb_tail(Ose_mb_id mid, Ose_fsm_message* msg_ptr, Ose_time
 *
 * Return:
 *   OSE_TRUE    :创建
-*   OSE_FALSE   :没创�?
+*   OSE_FALSE   :没创建
 * Note:
 *******************************************************************************/
 Bool ose_is_mb_created(Ose_mb_id mid)
@@ -352,7 +352,7 @@ Bool ose_is_mb_created(Ose_mb_id mid)
 }
 /*****************************************************************************
 * Function  : ose_delete_mb
-* Purpose   : 删除任务间邮�?
+* Purpose   : 删除任务间邮箱
 * Relation  :
 *
 * Input Parameters:
@@ -369,7 +369,7 @@ Bool ose_is_mb_created(Ose_mb_id mid)
 Ose_status ose_delete_mb(Ose_mb_id mid)
 {
 #ifdef LINUX_SWITCH
-    /*删除控制字段里的信号量和互斥�?*/
+    /*删除控制字段里的信号量和互斥量*/
     ose_delete_sema(ose_mailbox[mid].sema_lock_rd);
     ose_delete_sema(ose_mailbox[mid].sema_lock_wr);
     ose_delete_mutex(ose_mailbox[mid].mutex);
@@ -386,7 +386,7 @@ Ose_status ose_delete_mb(Ose_mb_id mid)
 }
 /*****************************************************************************
 * Function  : ose_get_spare_mb
-* Purpose   : 获取任务间邮箱的剩余容量百分�?
+* Purpose   : 获取任务间邮箱的剩余容量百分比
 * Relation  :
 *
 * Input Parameters:
@@ -414,7 +414,7 @@ UINT32 ose_get_spare_mb(Ose_mb_id mid)
 }
 /*****************************************************************************
 * Function  : ose_mb_delete_all
-* Purpose   : 删除所有创建的任务间和任务内邮�?
+* Purpose   : 删除所有创建的任务间和任务内邮箱
 * Relation  :
 *
 * Return:
@@ -434,7 +434,7 @@ Ose_status ose_mb_delete_all()
         {
             ose_mailbox[index].blist_ptr = (Ose_fixed_queue*)NULL;
 
-            /*删除控制字段里的信号量和互斥�?*/
+            /*删除控制字段里的信号量和互斥量*/
             ose_mailbox[index].sema_lock_rd = (Ose_sema_id)OSE_UNAVAILABLE_ID;
             ose_mailbox[index].sema_lock_wr = (Ose_sema_id)OSE_UNAVAILABLE_ID;
             ose_mailbox[index].mutex        = (Ose_mutex_id)OSE_UNAVAILABLE_ID;
@@ -446,7 +446,7 @@ Ose_status ose_mb_delete_all()
 }
 /*****************************************************************************
 * Function  : ose_send_message
-* Purpose   : 发送FSM消息到邮箱尾�?
+* Purpose   : 发送FSM消息到邮箱尾部
 * Relation  :
 *
 * Input Parameters:
@@ -493,7 +493,7 @@ Ose_status ose_send_message_ex_mb(Ose_fsm_message* fsm_msg_ptr, Bool is_preferre
 
     FSM_TIMESTAMP(fsm_msg_ptr) = (Ose_timestamp)ose_get_system_time();
 
-    /*取出发送者和接收�?*/
+    /*取出发送者和接收者*/
     dest_tid = FSM_DEST_TASK_ID(fsm_msg_ptr);
     src_tid  = FSM_SRC_TASK_ID(fsm_msg_ptr);
 
@@ -512,7 +512,7 @@ Ose_status ose_send_message_ex_mb(Ose_fsm_message* fsm_msg_ptr, Bool is_preferre
             return OSE_FAILURE;
         }
 
-        /*发�?*/
+        /*发送*/
         /*判断消息发送到头部还是尾部*/
         if(OSE_TRUE == is_preferred)
         {
@@ -539,14 +539,14 @@ Ose_status ose_send_message_ex_mb(Ose_fsm_message* fsm_msg_ptr, Bool is_preferre
             dest_tid = (*ose_tid_mid_transform_tbl[dest_tid])(fsm_msg_ptr);
         }
 
-        /*检查邮箱是否创�?*/
+        /*检查邮箱是否创建*/
         if(OSE_TRUE != ose_is_mb_created(dest_tid))
         {
             ose_trace(OSE_TRACE_ERROR,"[ose_send_message_ex_mb]: %d send mb %d is not create !!!",src_tid,dest_tid);
             return OSE_FAILURE;
         }
 
-        /*发�?*/
+        /*发送*/
         if(OSE_TRUE == is_preferred)
         {
             ret = ose_send_to_mb_head((Ose_mb_id)dest_tid, fsm_msg_ptr, OSE_WAIT_FOREVER);
